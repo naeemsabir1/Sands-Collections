@@ -1,0 +1,256 @@
+# ============================================
+# SANDS COLLECTIONS - GITIGNORE
+# Comprehensive security-focused configuration
+# ============================================
+
+# ============================================
+# DEPENDENCIES
+# ============================================
+node_modules/
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# ============================================
+# ENVIRONMENT & SECRETS
+# Never commit sensitive data!
+# ============================================
+.env
+.env.*
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+!.env.example
+!.env.local.example
+
+# Firebase service account keys
+*-firebase-adminsdk-*.json
+firebase-service-account.json
+firebase-debug.log
+firebase-debug.*.log
+.firebaserc
+firebase.json
+
+# Google Cloud credentials
+google-cloud-*.json
+service-account*.json
+credentials*.json
+
+# API Keys and secrets (catch-all patterns)
+*.pem
+*.key
+*.p12
+*.pfx
+secret*
+secrets/
+private/
+credentials/
+
+# ============================================
+# BUILD OUTPUTS
+# ============================================
+# Next.js
+/.next/
+/out/
+/build/
+.next
+out/
+
+# Production bundles
+dist/
+build/
+
+# ============================================
+# CACHE & TEMPORARY FILES
+# ============================================
+# Next.js cache
+.cache/
+*.cache
+
+# Turbo
+.turbo
+
+# Package manager caches
+.npm/
+.pnpm-store/
+
+# Eslint cache
+.eslintcache
+
+# Prettier cache
+.prettiercache
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# ============================================
+# LOGS & DEBUG
+# ============================================
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+lerna-debug.log*
+*.log
+logs/
+*.log.*
+
+# ============================================
+# TESTING & COVERAGE
+# ============================================
+/coverage/
+.nyc_output/
+*.lcov
+
+# Jest
+jest-results.json
+
+# Playwright
+/playwright-report/
+/playwright/.cache/
+test-results/
+
+# Cypress
+/cypress/screenshots/
+/cypress/videos/
+/cypress/downloads/
+
+# ============================================
+# EDITOR & IDE
+# ============================================
+# VS Code (allow workspace settings, ignore personal)
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# JetBrains (WebStorm, IntelliJ)
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim/Neovim
+*.swp
+*.swo
+*.swn
+*~
+.vim/
+
+# Emacs
+*~
+\#*\#
+.#*
+
+# ============================================
+# OPERATING SYSTEM
+# ============================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ============================================
+# DEPLOYMENT & HOSTING
+# ============================================
+# Vercel
+.vercel/
+.vercel
+
+# Netlify
+.netlify/
+
+# AWS
+.aws/
+.serverless/
+
+# Heroku
+.heroku/
+
+# Docker
+.docker/
+
+# ============================================
+# MISCELLANEOUS
+# ============================================
+# Local development
+*.local
+
+# Backup files
+*.bak
+*.backup
+*.orig
+
+# Compiled files
+*.map
+
+# Documentation generation
+.docusaurus/
+
+# Storybook
+storybook-static/
+
+# Bundle analyzer
+.bundle-analyzer/
+analyze/
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+.temp/
+
+# Generated files
+generated/
+.generated/
+
+# Lock files (uncomment if needed)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# ============================================
+# PROJECT SPECIFIC
+# ============================================
+# Seed data (if contains sensitive info)
+# /src/app/seed/
+
+# Upload directories
+uploads/
+/public/uploads/
+
+# Gemini/AI artifacts
+.gemini/
