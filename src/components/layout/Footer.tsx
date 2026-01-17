@@ -8,8 +8,6 @@ import {
     Instagram,
     Phone,
     Mail,
-    Facebook,
-    Twitter,
     Star,
     Truck,
     CreditCard,
@@ -60,7 +58,6 @@ const footerLinks = {
         { name: 'Ihram Collection', href: '/ihram' },
     ],
     support: [
-        { name: 'Order Status', href: '/track' },
         { name: 'Shipping Policy', href: '/shipping' },
         { name: 'Returns', href: '/returns' },
         { name: 'Size Guide', href: '/size-guide' },
@@ -74,7 +71,7 @@ const footerLinks = {
     ],
 };
 
-const WHATSAPP_NUMBER = '+923066166152';
+const WHATSAPP_NUMBER = '+923334944293';
 
 const testimonialsRow1 = [
     {
@@ -132,6 +129,8 @@ const testimonialsRow2 = [
 
 export function Footer() {
     const pathname = usePathname();
+
+    if (pathname?.startsWith('/admin')) return null;
 
     return (
         <footer className="relative mt-32 pt-20 pb-10 overflow-hidden bg-[#0a0a0a]">
@@ -228,9 +227,7 @@ export function Footer() {
 
                         {/* Glass Social Pills */}
                         <div className="flex flex-wrap gap-3">
-                            <SocialPill icon={Instagram} label="Instagram" href="https://instagram.com/sandscollections" />
-                            <SocialPill icon={Facebook} label="Facebook" href="#" />
-                            <SocialPill icon={Twitter} label="Twitter" href="#" />
+                            <SocialPill icon={Instagram} label="Instagram" href="https://www.instagram.com/sands_collections_official" />
                         </div>
                     </div>
 
@@ -275,18 +272,18 @@ export function Footer() {
                                     <div className="w-10 h-10 rounded-full bg-white/[0.05] flex items-center justify-center flex-shrink-0 group-hover:bg-gold-primary/20 transition-colors">
                                         <Phone size={16} className="text-white group-hover:text-gold-primary transition-colors" />
                                     </div>
-                                    <div>
+                                    <div className="min-w-0">
                                         <p className="text-xs text-white/40 uppercase tracking-wider mb-1">Call Us</p>
-                                        <a href="tel:+923066166152" className="text-white group-hover:text-gold-primary transition-colors text-sm">+92 306 6166152</a>
+                                        <a href="tel:+923334944293" className="text-white group-hover:text-gold-primary transition-colors text-sm whitespace-nowrap">0333-4944293</a>
                                     </div>
                                 </li>
                                 <li className="flex gap-4 group cursor-default">
                                     <div className="w-10 h-10 rounded-full bg-white/[0.05] flex items-center justify-center flex-shrink-0 group-hover:bg-gold-primary/20 transition-colors">
                                         <Mail size={16} className="text-white group-hover:text-gold-primary transition-colors" />
                                     </div>
-                                    <div>
+                                    <div className="min-w-0 overflow-hidden">
                                         <p className="text-xs text-white/40 uppercase tracking-wider mb-1">Email</p>
-                                        <a href="mailto:info@sandscollections.com" className="text-white group-hover:text-gold-primary transition-colors text-sm">info@sands.com</a>
+                                        <a href="mailto:sandsclothingofficial@gmail.com" className="text-white group-hover:text-gold-primary transition-colors text-xs truncate block" title="sandsclothingofficial@gmail.com">sandsclothingofficial@gmail.com</a>
                                     </div>
                                 </li>
                             </ul>

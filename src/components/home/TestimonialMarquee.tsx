@@ -3,58 +3,8 @@
 import { motion, Variants } from 'framer-motion';
 import { Star, CheckCircle, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-
-const testimonials = [
-    {
-        id: 1,
-        name: 'Hiba Shahid',
-        location: 'Bahria Town, Lahore',
-        quote: "Ordered the unstitched lawn suit. Yaar, the fabric is so soft! Quality is definitely 10/10. Will shop again for sure.",
-        rating: 5,
-    },
-    {
-        id: 2,
-        name: 'Omar Farooq',
-        location: 'F-11, Islamabad',
-        quote: "Finally a brand that understands 'premium'. The fit of the Kurta is exactly what I was looking for. Highly recommended.",
-        rating: 5,
-    },
-    {
-        id: 3,
-        name: 'Sana Malik',
-        location: 'Clifton, Karachi',
-        quote: "Delivery was super fast and the packaging basically feels like a gift. The shawl is just gorgeous!",
-        rating: 5,
-    },
-    {
-        id: 4,
-        name: 'Usman Qureshi',
-        location: 'PECHS, Karachi',
-        quote: "Customer service is very responsive. Had a size issue initially but they exchanged it smoothly. Zabardast!",
-        rating: 5,
-    },
-    {
-        id: 5,
-        name: 'Fatima Khan',
-        location: 'Model Town, Lahore',
-        quote: "Fragrance collection is mesmerizing. Lasting bohat achi hai. It smells so expensive but price is reasonable.",
-        rating: 5,
-    },
-    {
-        id: 6,
-        name: 'Ali Raza',
-        location: 'DHA, Lahore',
-        quote: "Best shopping experience for men's eastern wear. The finish of the fabric is superior to other top brands.",
-        rating: 5,
-    },
-    {
-        id: 7,
-        name: 'Rabia Hassan',
-        location: 'Cantt, Rawalpindi',
-        quote: "Was skeptical at first but the quality did justice. Real money for value.",
-        rating: 5,
-    }
-];
+import { useEffect, useState } from 'react';
+import { Review } from '@/lib/types';
 
 const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -64,7 +14,81 @@ const containerVariants: Variants = {
     },
 };
 
+// Fallback testimonials in case DB is empty
+const fallbackTestimonials = [
+    {
+        id: '1',
+        userName: 'Hiba Shahid',
+        comment: "Ordered the unstitched lawn suit. Yaar, the fabric is so soft! Quality is definitely 10/10. Will shop again for sure.",
+        rating: 5,
+    },
+    {
+        id: '2',
+        userName: 'Omar Farooq',
+        comment: "Finally a brand that understands 'premium'. The fit of the Kurta is exactly what I was looking for. Highly recommended.",
+        rating: 5,
+    },
+    {
+        id: '3',
+        userName: 'Sana Malik',
+        comment: "Delivery was super fast and the packaging basically feels like a gift. The shawl is just gorgeous!",
+        rating: 5,
+    },
+    {
+        id: '4',
+        userName: 'Fatima Khan',
+        comment: "Fragrance collection is mesmerizing. Lasting bohat achi hai. It smells so expensive but price is reasonable.",
+        rating: 5,
+    },
+];
+
+interface TestimonialItem {
+    id: string;
+    userName: string;
+    comment: string;
+    rating: number;
+}
+
 export function TestimonialMarquee() {
+    const [testimonials, setTestimonials] = useState<TestimonialItem[]>(fallbackTestimonials);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        async function fetchReviews() {
+            try {
+                const { getReviews } = await import('@/lib/firestore');
+                const reviews = await getReviews();
+
+                if (reviews && reviews.length > 0) {
+                    // Take top reviews (4-5 stars) for the marquee
+                    const topReviews = reviews
+                        .filter((r: Review) => r.rating >= 4)
+                        .slice(0, 14) // Get enough for two rows
+                        .map((r: Review) => ({
+                            id: r.id,
+                            userName: r.userName,
+                            comment: r.comment,
+                            rating: r.rating,
+                        }));
+
+                    if (topReviews.length > 0) {
+                        setTestimonials(topReviews);
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to fetch reviews for marquee:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        fetchReviews();
+    }, []);
+
+    // Split testimonials into two rows
+    const midPoint = Math.ceil(testimonials.length / 2);
+    const row1 = testimonials.slice(0, midPoint);
+    const row2 = testimonials.slice(midPoint);
+
     return (
         <section className="bg-[#111111] py-20 overflow-hidden relative">
             {/* Ambient Gradient Background */}
@@ -100,7 +124,7 @@ export function TestimonialMarquee() {
                 {/* Row 1 - Scroll Left */}
                 <div className="flex overflow-hidden group">
                     <div className="flex gap-6 animate-scroll-left group-hover:pause-animation min-w-full px-3 transform-gpu">
-                        {[...testimonials, ...testimonials].map((t, i) => (
+                        {[...row1, ...row1].map((t, i) => (
                             <div key={`${t.id}-1-${i}`} className="flex-shrink-0 w-[300px] md:w-[420px]">
                                 <ReviewCard review={t} />
                             </div>
@@ -111,7 +135,7 @@ export function TestimonialMarquee() {
                 {/* Row 2 - Scroll Right */}
                 <div className="flex overflow-hidden group">
                     <div className="flex gap-6 animate-scroll-right group-hover:pause-animation min-w-full px-3 transform-gpu">
-                        {[...testimonials.reverse(), ...testimonials].map((t, i) => (
+                        {[...row2, ...row2].map((t, i) => (
                             <div key={`${t.id}-2-${i}`} className="flex-shrink-0 w-[300px] md:w-[420px]">
                                 <ReviewCard review={t} />
                             </div>
@@ -134,14 +158,18 @@ export function TestimonialMarquee() {
     );
 }
 
-function ReviewCard({ review }: { review: typeof testimonials[0] }) {
+function ReviewCard({ review }: { review: TestimonialItem }) {
     return (
         <div className="bg-[#1A1A1A] p-6 rounded-2xl border border-white/5 hover:border-gold-primary/20 transition-all duration-300 h-full flex flex-col justify-between">
             <div>
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex gap-1">
                         {[1, 2, 3, 4, 5].map(s => (
-                            <Star key={s} size={14} className="fill-gold-primary text-gold-primary" />
+                            <Star
+                                key={s}
+                                size={14}
+                                className={s <= review.rating ? "fill-gold-primary text-gold-primary" : "fill-gray-600 text-gray-600"}
+                            />
                         ))}
                     </div>
                     <div className="flex items-center gap-1 bg-green-500/10 px-2 py-1 rounded text-[10px] font-bold tracking-wider text-green-500 uppercase">
@@ -149,17 +177,17 @@ function ReviewCard({ review }: { review: typeof testimonials[0] }) {
                     </div>
                 </div>
                 <p className="text-white/80 text-sm md:text-base leading-relaxed italic mb-6">
-                    "{review.quote}"
+                    "{review.comment}"
                 </p>
             </div>
 
             <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center text-white/50 font-bold text-sm">
-                    {review.name.charAt(0)}
+                    {review.userName.charAt(0)}
                 </div>
                 <div>
-                    <h4 className="text-white font-medium text-sm">{review.name}</h4>
-                    <p className="text-white/40 text-xs">{review.location}</p>
+                    <h4 className="text-white font-medium text-sm">{review.userName}</h4>
+                    <p className="text-white/40 text-xs">Verified Customer</p>
                 </div>
             </div>
         </div>

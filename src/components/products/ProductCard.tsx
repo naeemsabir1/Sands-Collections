@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Heart, ShoppingBag, Eye } from 'lucide-react';
+import { Heart, ShoppingBag, Eye, Star } from 'lucide-react';
 import { Product, ProductBadge } from '@/lib/types';
 import { formatPrice, calculateDiscount } from '@/lib/utils';
 import { useCart } from '@/contexts/CartContext';
@@ -97,8 +97,8 @@ export function ProductCard({ product }: ProductCardProps) {
                     <button
                         onClick={handleWishlist}
                         className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 z-20 ${isWishlisted
-                                ? 'bg-rose-500 text-white shadow-md'
-                                : 'bg-white/80 backdrop-blur-sm text-charcoal hover:bg-white hover:scale-110 opacity-0 group-hover:opacity-100'
+                            ? 'bg-rose-500 text-white shadow-md'
+                            : 'bg-white/80 backdrop-blur-sm text-charcoal hover:bg-white hover:scale-110 opacity-0 group-hover:opacity-100'
                             }`}
                         aria-label="Add to wishlist"
                     >
@@ -140,6 +140,17 @@ export function ProductCard({ product }: ProductCardProps) {
                     <h3 className="font-playfair text-charcoal text-base font-medium leading-snug mb-1.5 truncate group-hover:text-gold-dark transition-colors">
                         {product.name}
                     </h3>
+
+                    {/* Rating */}
+                    {product.averageRating ? (
+                        <div className="flex items-center gap-1 mb-2">
+                            <Star size={12} className="fill-gold-primary text-gold-primary" />
+                            <span className="text-xs font-semibold text-charcoal">{product.averageRating}</span>
+                            <span className="text-[10px] text-medium-gray">({product.reviewCount})</span>
+                        </div>
+                    ) : (
+                        <div className="h-5 mb-1" /> // Spacer for alignment
+                    )}
 
                     {/* Price */}
                     <div className="flex items-center gap-2">

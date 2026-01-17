@@ -2,45 +2,11 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { HeroSlide } from '@/lib/types';
 import { convertDriveLink } from '@/lib/utils';
-
-// Default slides when database is empty
-const defaultSlides: HeroSlide[] = [
-    {
-        id: '1',
-        title: "Spring '26 Collection",
-        subtitle: 'Golden Hour',
-        description: 'Discover our exclusive range of premium Pakistani fashion',
-        image: 'https://images.unsplash.com/photo-1558171813-4c088753af8f?q=80&w=2070',
-        ctaText: 'Explore Now',
-        ctaLink: '/women',
-        order: 0,
-    },
-    {
-        id: '2',
-        title: 'Luxury Fragrances',
-        subtitle: 'Signature Scents',
-        description: 'Find your perfect fragrance from our curated collection',
-        image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=2104',
-        ctaText: 'Shop Fragrances',
-        ctaLink: '/fragrances',
-        order: 1,
-    },
-    {
-        id: '3',
-        title: "Men's Collection",
-        subtitle: 'Premium Fabrics',
-        description: 'Timeless elegance meets modern craftsmanship',
-        image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2070',
-        ctaText: 'View Collection',
-        ctaLink: '/men',
-        order: 2,
-    },
-];
 
 interface HeroSliderProps {
     slides?: HeroSlide[];
@@ -48,37 +14,33 @@ interface HeroSliderProps {
 }
 
 export function HeroSlider({ slides: propSlides, isLoading = false }: HeroSliderProps) {
-    // Use Firebase slides when available, otherwise defaults immediately (no waiting)
-    const slides = propSlides && propSlides.length > 0 ? propSlides : defaultSlides;
+    const slides = propSlides && propSlides.length > 0 ? propSlides : [];
     const [currentIndex, setCurrentIndex] = useState(0);
     const [direction, setDirection] = useState(0);
-    // Only show counter after Firebase data has loaded (prevents 03→06 jump)
-    const [showCounter, setShowCounter] = useState(false);
 
-    // Reset to first slide when slides data changes and show counter once stable
+    // Reset to first slide when slides data changes
     useEffect(() => {
         setCurrentIndex(0);
-        // If propSlides has data, show the counter
-        if (propSlides && propSlides.length > 0) {
-            setShowCounter(true);
-        }
     }, [propSlides?.length]);
 
     const slideNext = useCallback(() => {
+        if (slides.length === 0) return;
         setDirection(1);
         setCurrentIndex((prev) => (prev + 1) % slides.length);
     }, [slides.length]);
 
     const slidePrev = useCallback(() => {
+        if (slides.length === 0) return;
         setDirection(-1);
         setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
     }, [slides.length]);
 
-    // Auto-advance slides
+    // Auto-advance slides (only when slides exist)
     useEffect(() => {
+        if (slides.length === 0) return;
         const timer = setInterval(slideNext, 8000);
         return () => clearInterval(timer);
-    }, [slideNext]);
+    }, [slideNext, slides.length]);
 
     const currentSlide = slides[currentIndex];
 
@@ -102,6 +64,48 @@ export function HeroSlider({ slides: propSlides, isLoading = false }: HeroSlider
             scale: 1,
         }),
     };
+
+    // Show loading skeleton while fetching slides
+    if (isLoading || slides.length === 0) {
+        return (
+            <section className="relative h-[85vh] md:h-[95vh] w-full overflow-hidden bg-charcoal -mt-32 md:-mt-36">
+                {/* Animated gradient background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-charcoal via-gray-900 to-black">
+                    <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03]" />
+                </div>
+
+                {/* Centered loading content */}
+                <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                    >
+                        <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full border border-gold-primary/30 bg-gold-primary/10">
+                            <Loader2 className="w-4 h-4 text-gold-primary animate-spin" />
+                            <span className="text-xs font-medium tracking-[0.2em] uppercase text-gold-light">
+                                Loading Collection
+                            </span>
+                        </div>
+
+                        <h1 className="font-playfair text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-light to-amber-500">
+                                SANDS
+                            </span>
+                            {' '}Collections
+                        </h1>
+
+                        <p className="text-white/60 text-lg max-w-md mx-auto">
+                            Discover premium Pakistani fashion
+                        </p>
+                    </motion.div>
+                </div>
+
+                {/* Subtle animated glow */}
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-gold-primary/10 rounded-full blur-3xl animate-pulse" />
+            </section>
+        );
+    }
 
     return (
         <section className="relative h-[85vh] md:h-[95vh] w-full overflow-hidden bg-charcoal -mt-32 md:-mt-36">
@@ -227,7 +231,7 @@ export function HeroSlider({ slides: propSlides, isLoading = false }: HeroSlider
 
             {/* Navigation Controls - Glass & Minimal */}
             <div className="absolute bottom-12 right-8 md:right-16 flex items-center gap-4 z-20">
-                <div className={`flex items-center gap-1 mr-4 transition-opacity duration-500 ${showCounter ? 'opacity-100' : 'opacity-0'}`}>
+                <div className="flex items-center gap-1 mr-4">
                     <span className="text-3xl font-playfair font-bold text-white">
                         {String(currentIndex + 1).padStart(2, '0')}
                     </span>

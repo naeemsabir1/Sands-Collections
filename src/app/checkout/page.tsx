@@ -7,8 +7,9 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, MessageCircle, MapPin, User, Phone, FileText, Check } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { formatPrice, generateWhatsAppMessage, validatePakistaniPhone, formatPhoneForWhatsApp } from '@/lib/utils';
+import { incrementCheckout } from '@/lib/firestore';
 
-const WHATSAPP_NUMBER = '923066166152';
+const WHATSAPP_NUMBER = '923334944293';
 const SHIPPING_COST = 250;
 const FREE_SHIPPING_THRESHOLD = 5000;
 
@@ -74,6 +75,7 @@ export default function CheckoutPage() {
         if (state.items.length === 0) return;
 
         setIsSubmitting(true);
+        incrementCheckout(); // Track the checkout click
 
         // Prepare order items for WhatsApp message
         const orderItems = state.items.map(item => ({

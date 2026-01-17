@@ -17,6 +17,8 @@ export interface Product {
     badge?: ProductBadge;
     featured?: boolean;
     newArrival?: boolean;
+    averageRating?: number;
+    reviewCount?: number;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -161,4 +163,27 @@ export interface ProductFilters {
     inStock?: boolean;
     material?: string;
     sortBy?: 'price-asc' | 'price-desc' | 'newest' | 'popular';
+}
+
+export interface Review {
+    id: string;
+    productId: string;
+    productName?: string;
+    userName: string;
+    rating: number;
+    comment: string;
+    date: string; // ISO String for easier serialization or custom format
+    verified: boolean;
+    createdAt: Date;
+}
+
+export interface ContactMessage {
+    id: string;
+    name: string;
+    email: string;
+    subject: string;
+    message: string;
+    status: 'new' | 'read' | 'replied';
+    createdAt: Date;
+    repliedAt?: Date;
 }

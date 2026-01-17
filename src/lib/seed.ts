@@ -453,11 +453,11 @@ const featuredCollections = [
 // Site Settings
 const siteSettings = {
     storeName: 'Sands Collections',
-    whatsappNumber: '+923066166152',
-    email: 'info@sandscollections.com',
+    whatsappNumber: '+923334944293',
+    email: 'sandsclothingofficial@gmail.com',
     address: 'DHA Phase 6, Lahore, Pakistan',
     socialLinks: {
-        instagram: 'https://instagram.com/sandscollections',
+        instagram: 'https://www.instagram.com/sands_collections_official',
     },
     shippingCost: 250,
     freeShippingThreshold: 5000,

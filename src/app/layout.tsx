@@ -5,6 +5,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
+import { AnalyticsProvider } from "@/components/layout/AnalyticsProvider";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -52,11 +53,13 @@ export default function RootLayout({
 
         <CartProvider>
           <WishlistProvider>
-            <Navbar />
-            <main className="min-h-screen relative z-0 pt-32 md:pt-36">
-              {children}
-            </main>
-            <Footer />
+            <AnalyticsProvider>
+              <Navbar />
+              <main className="min-h-screen relative z-0 pt-32 md:pt-36">
+                {children}
+              </main>
+              <Footer />
+            </AnalyticsProvider>
           </WishlistProvider>
         </CartProvider>
       </body>

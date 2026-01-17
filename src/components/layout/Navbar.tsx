@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Menu,
@@ -50,19 +51,31 @@ const categories = [
             { name: 'Gents', href: '/ihram/gents' },
         ],
     },
+    {
+        name: 'Reviews',
+        href: '/reviews',
+    },
+    {
+        name: 'Contact Us',
+        href: '/contact',
+    },
 ];
 
 export function Navbar() {
+    const pathname = usePathname();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
+    const [hasMounted, setHasMounted] = useState(false); // Hydration fix
     const { state: cartState } = useCart();
     const { state: wishlistState } = useWishlist();
 
     // Handle scroll for navbar styling
     // Handle scroll for navbar styling
     useEffect(() => {
+        setHasMounted(true); // Mark as mounted to enable client-only rendering
+
         let ticking = false;
         const handleScroll = () => {
             if (!ticking) {
@@ -76,6 +89,9 @@ export function Navbar() {
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    // Hide navbar on admin pages
+    if (pathname?.startsWith('/admin')) return null;
 
     return (
         <>
@@ -183,7 +199,7 @@ export function Navbar() {
                                 aria-label="Wishlist"
                             >
                                 <Heart size={20} strokeWidth={1.5} className="text-charcoal group-hover:text-gold-dark transition-colors" />
-                                {wishlistState.totalItems > 0 && (
+                                {hasMounted && wishlistState.totalItems > 0 && (
                                     <span className="absolute -top-1 -right-1 w-4 h-4 bg-gold-primary text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm animate-bounce">
                                         {wishlistState.totalItems}
                                     </span>
@@ -204,7 +220,7 @@ export function Navbar() {
                                 aria-label="Cart"
                             >
                                 <ShoppingBag size={20} strokeWidth={1.5} className="text-charcoal group-hover:text-gold-dark transition-colors" />
-                                {cartState.totalItems > 0 && (
+                                {hasMounted && cartState.totalItems > 0 && (
                                     <span className="absolute -top-1 -right-1 w-4 h-4 bg-gold-primary text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm animate-bounce">
                                         {cartState.totalItems}
                                     </span>
@@ -301,7 +317,7 @@ export function Navbar() {
                                     >
                                         <Heart size={18} />
                                         Wishlist
-                                        {wishlistState.totalItems > 0 && (
+                                        {hasMounted && wishlistState.totalItems > 0 && (
                                             <span className="px-1.5 py-0.5 bg-gold-primary text-white text-xs rounded-full">
                                                 {wishlistState.totalItems}
                                             </span>

@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { Heart, ShoppingBag, Minus, Plus, ChevronRight, Truck, RotateCcw, Shield, Check, Star, Loader2 } from 'lucide-react';
 import { ImageZoom } from '@/components/products/ImageZoom';
 import { ProductCard } from '@/components/products/ProductCard';
+import { ProductReviews } from '@/components/products/ProductReviews';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { formatPrice, calculateDiscount } from '@/lib/utils';
@@ -393,6 +394,11 @@ export default function ProductDetailPage({ params }: PageProps) {
                         </div>
                     </div>
                 </div>
+            </section>
+
+            {/* Reviews Section */}
+            <section className="container mx-auto px-6 lg:px-12 pb-20">
+                <ProductReviews productId={product.id} />
             </section>
 
             {/* Related Products Section */}

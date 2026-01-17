@@ -124,7 +124,7 @@ export function BrandExperience() {
                         className="flex justify-center mt-8"
                     >
                         <motion.a
-                            href="https://wa.me/923066166152"
+                            href="https://wa.me/923334944293"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-3 px-8 py-4 bg-charcoal text-white font-medium rounded-full
