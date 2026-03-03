@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import {
     Instagram,
@@ -23,7 +23,7 @@ const policyFeatures: { icon: LucideIcon; title: string; description: string }[]
     { icon: Shield, title: 'Premium Quality', description: 'Finest materials only' },
 ];
 
-const policyContainerVariants = {
+const policyContainerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
         opacity: 1,
@@ -31,7 +31,7 @@ const policyContainerVariants = {
     },
 };
 
-const policyItemVariants = {
+const policyItemVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
         opacity: 1,
@@ -40,7 +40,7 @@ const policyItemVariants = {
     },
 };
 
-const iconFloatVariants = {
+const iconFloatVariants: Variants = {
     initial: { y: 0 },
     animate: {
         y: [-2, 2, -2],

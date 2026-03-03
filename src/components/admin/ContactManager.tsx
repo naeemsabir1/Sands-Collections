@@ -1,4 +1,4 @@
-`'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -67,7 +67,7 @@ export function ContactManager() {
     };
 
     const openEmailClient = (email: string, subject: string) => {
-        const mailtoLink = `mailto:${email}?subject=Re: ${encodeURIComponent(subject)}`;
+        const mailtoLink = "mailto:" + email + "?subject=Re: " + encodeURIComponent(subject);
         window.open(mailtoLink, '_blank');
     };
 
@@ -180,10 +180,7 @@ export function ContactManager() {
                         <button
                             key={status}
                             onClick={() => setFilterStatus(status as any)}
-                            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${filterStatus === status
-                                    ? 'bg-charcoal text-white'
-                                    : 'bg-white text-charcoal border border-gray-200 hover:border-gold-primary'
-                                }`}
+                            className={["px-4 py-2 rounded-xl text-sm font-medium transition-all", filterStatus === status ? "bg-charcoal text-white" : "bg-white text-charcoal border border-gray-200 hover:border-gold-primary"].join(" ")}
                         >
                             {status.charAt(0).toUpperCase() + status.slice(1)}
                         </button>
@@ -215,8 +212,7 @@ export function ContactManager() {
                                 key={message.id}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
-                                className={`p-6 hover:bg-gray-50 transition-colors cursor-pointer ${message.status === 'new' ? 'bg-blue-50/50' : ''
-                                    }`}
+                                className={["p-6 hover:bg-gray-50 transition-colors cursor-pointer", message.status === 'new' ? 'bg-blue-50/50' : ''].join(" ")}
                                 onClick={() => {
                                     setSelectedMessage(message);
                                     if (message.status === 'new') {
@@ -227,8 +223,7 @@ export function ContactManager() {
                                 <div className="flex items-start justify-between gap-4">
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-3 mb-1">
-                                            <h4 className={`font-semibold text-charcoal truncate ${message.status === 'new' ? 'font-bold' : ''
-                                                }`}>
+                                            <h4 className={["font-semibold text-charcoal truncate", message.status === 'new' ? 'font-bold' : ''].join(" ")}>
                                                 {message.name}
                                             </h4>
                                             {getStatusBadge(message.status)}
@@ -311,7 +306,7 @@ export function ContactManager() {
                                     <div>
                                         <p className="font-semibold text-charcoal">{selectedMessage.name}</p>
                                         <a
-                                            href={`mailto:${selectedMessage.email}`}
+                                            href={"mailto:" + selectedMessage.email}
                                             className="text-sm text-gold-primary hover:underline"
                                         >
                                             {selectedMessage.email}

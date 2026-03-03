@@ -14,23 +14,21 @@ export default function HomePage() {
   const [heroSlides, setHeroSlides] = useState<HeroSlide[]>([]);
   const [categories, setCategories] = useState<CuratedCategory[]>([]);
   const [featured, setFeatured] = useState<FeaturedCollection[]>([]);
-  const [newArrivals, setNewArrivals] = useState<Product[]>([]);
+
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loadHomeData() {
       try {
-        const [slides, cats, feat, products] = await Promise.all([
+        const [slides, cats, feat] = await Promise.all([
           getHeroSlides(),
           getCuratedCategories(),
-          getFeaturedCollections(),
-          getProducts({ newArrival: true, limitCount: 8 }),
+          getFeaturedCollections()
         ]);
 
         setHeroSlides(slides);
         setCategories(cats);
         setFeatured(feat);
-        setNewArrivals(products);
       } catch (error) {
         console.error('Error loading home data:', error);
       } finally {
@@ -53,7 +51,7 @@ export default function HomePage() {
       <FeaturedCollections collections={featured} />
 
       {/* New Arrivals Carousel - Products with newArrival flag */}
-      <NewArrivals products={newArrivals} />
+      <NewArrivals />
 
       {/* Reviews Details Section (Marquee from Image) */}
       <TestimonialMarquee />
