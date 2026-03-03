@@ -5,18 +5,20 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Edit, Trash2, X, Save, Loader2, RefreshCw, Grid3X3 } from 'lucide-react';
 import { FeaturedCollection } from '@/lib/types';
 import { convertDriveLink } from '@/lib/utils';
-import { getFeaturedCollections, addFeaturedCollection, updateFeaturedCollection, deleteFeaturedCollection } from '@/lib/firestore';
+import { getFeaturedCollections, addFeaturedCollection, updateFeaturedCollection, deleteFeaturedCollection, seedFeaturedCollections } from '@/lib/firestore';
 import Image from 'next/image';
 
 const linkOptions = [
+    { value: '/men', label: "Men's Collection" },
+    { value: '/women', label: "Women's Collection" },
     { value: '/men/shawls', label: "Men's Shawls" },
     { value: '/men/unstitched-suiting', label: "Men's Unstitched Suiting" },
     { value: '/women/shawls', label: "Women's Shawls" },
     { value: '/women/duppattas', label: "Duppattas" },
+    { value: '/fragrances', label: 'Fragrances' },
     { value: '/fragrances/mens', label: 'Fragrances - Mens' },
     { value: '/fragrances/womens', label: 'Fragrances - Womens' },
     { value: '/fragrances/unisex', label: 'Fragrances - Unisex' },
-    { value: '/beadwork', label: 'Beadwork' },
     { value: '/ihram', label: 'Ihram' },
 ];
 
@@ -24,6 +26,7 @@ export function FeaturedManager() {
     const [featuredCollections, setFeaturedCollections] = useState<FeaturedCollection[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
+    const [isSeeding, setIsSeeding] = useState(false);
     const [isAddingFeatured, setIsAddingFeatured] = useState(false);
     const [editingFeatured, setEditingFeatured] = useState<FeaturedCollection | null>(null);
 
@@ -181,6 +184,30 @@ export function FeaturedManager() {
                 <div className="py-24 text-center bg-white rounded-3xl border border-dashed border-gray-200">
                     <Grid3X3 size={48} className="mx-auto text-gray-200 mb-4" />
                     <p className="text-lg font-medium text-charcoal">No featured collections</p>
+                    <p className="text-medium-gray mb-6">Seed the default collections to get started.</p>
+                    <button
+                        onClick={async () => {
+                            if (confirm('This will create 4 featured collections including Men\'s Collection and Women\'s Collection. Continue?')) {
+                                setIsSeeding(true);
+                                const success = await seedFeaturedCollections();
+                                setIsSeeding(false);
+                                if (success) {
+                                    alert('✅ Successfully created featured collections!');
+                                    loadFeatured();
+                                } else {
+                                    alert('❌ Failed to seed. Please try again.');
+                                }
+                            }
+                        }}
+                        disabled={isSeeding}
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-gold-primary text-white rounded-xl hover:bg-gold-dark transition-all font-medium disabled:opacity-50"
+                    >
+                        {isSeeding ? (
+                            <><Loader2 size={18} className="animate-spin" /> Creating Collections...</>
+                        ) : (
+                            <><Grid3X3 size={18} /> Seed Default Collections</>
+                        )}
+                    </button>
                 </div>
             )}
 

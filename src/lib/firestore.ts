@@ -381,6 +381,72 @@ export async function deleteFeaturedCollection(id: string): Promise<boolean> {
     }
 }
 
+// Seed Featured Collections with updated Men's/Women's Collection links
+export async function seedFeaturedCollections(): Promise<boolean> {
+    try {
+        console.log('Starting Featured Collections Seeding...');
+
+        // 1. Delete all existing featured collections
+        const existingSnapshot = await getDocs(collection(db, FEATURED_COLLECTION));
+        const batchDelete = writeBatch(db);
+        existingSnapshot.docs.forEach((docItem) => {
+            batchDelete.delete(docItem.ref);
+        });
+        await batchDelete.commit();
+        console.log('Cleared existing featured collections.');
+
+        // 2. Create new featured collections with updated links
+        const featuredToCreate = [
+            {
+                title: "Men's Collection",
+                subtitle: 'Shawls & Suiting',
+                image: 'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?q=80&w=800',
+                href: '/men',
+                span: 'large',
+                order: 0,
+            },
+            {
+                title: 'Fragrances',
+                subtitle: 'Signature Scents',
+                image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=600',
+                href: '/fragrances',
+                span: 'medium',
+                order: 1,
+            },
+            {
+                title: 'Ihram',
+                subtitle: 'Sacred Garments',
+                image: 'https://plus.unsplash.com/premium_photo-1678122822557-55e1432f4b46?q=80&w=600',
+                href: '/ihram',
+                span: 'medium',
+                order: 2,
+            },
+            {
+                title: "Women's Collection",
+                subtitle: 'Shawls & Duppattas',
+                image: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800',
+                href: '/women',
+                span: 'large',
+                order: 3,
+            },
+        ];
+
+        // 3. Add to database
+        const batch = writeBatch(db);
+        featuredToCreate.forEach((featured) => {
+            const newDocRef = doc(collection(db, FEATURED_COLLECTION));
+            batch.set(newDocRef, featured);
+        });
+        await batch.commit();
+
+        console.log(`Successfully seeded ${featuredToCreate.length} featured collections.`);
+        return true;
+    } catch (error) {
+        console.error('Error seeding featured collections:', error);
+        return false;
+    }
+}
+
 // ==========================================
 // NEW ARRIVAL SHOWCASES
 // ==========================================
@@ -438,6 +504,106 @@ export async function deleteNewArrivalShowcase(id: string): Promise<boolean> {
         return false;
     }
 }
+
+// Seed New Arrival Showcases with default data linked to actual products
+export async function seedNewArrivals(): Promise<boolean> {
+    try {
+        console.log('Starting New Arrivals Seeding...');
+
+        // 1. Delete all existing showcases
+        const existingSnapshot = await getDocs(collection(db, NEW_ARRIVALS_COLLECTION));
+        const batchDelete = writeBatch(db);
+        existingSnapshot.docs.forEach((docItem) => {
+            batchDelete.delete(docItem.ref);
+        });
+        await batchDelete.commit();
+        console.log('Cleared existing showcases.');
+
+        // 2. Fetch products to link showcases to
+        const products = await getProducts();
+        if (products.length === 0) {
+            console.error('No products found to link showcases to.');
+            return false;
+        }
+
+        // Helper to find a product by category or name keyword
+        const findProduct = (categoryKeyword: string, nameKeyword?: string) => {
+            let found = products.find(p =>
+                p.category.includes(categoryKeyword) &&
+                (nameKeyword ? p.name.toLowerCase().includes(nameKeyword.toLowerCase()) : true)
+            );
+            if (!found) {
+                found = products.find(p => p.category.includes(categoryKeyword));
+            }
+            return found || products[0];
+        };
+
+        // 3. Create 6 showcases linked to real products
+        const showcasesToCreate = [
+            {
+                media: 'https://images.unsplash.com/photo-1558171813-4c088753af8f?q=80&w=1000',
+                mediaType: 'image' as const,
+                linkedProductId: findProduct('mens-shawls', 'pashmina').id,
+                title: 'Premium Pashmina Collection',
+                order: 0,
+            },
+            {
+                media: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=1000',
+                mediaType: 'image' as const,
+                linkedProductId: findProduct('mens-shawls', 'wool').id,
+                title: 'Elegant Shawls',
+                order: 1,
+            },
+            {
+                media: 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=1000',
+                mediaType: 'image' as const,
+                linkedProductId: findProduct('fragrances', 'oud').id,
+                title: 'Exclusive Fragrances',
+                order: 2,
+            },
+            {
+                media: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000',
+                mediaType: 'image' as const,
+                linkedProductId: findProduct('mens-unstitched-suiting').id,
+                title: 'Suiting Collection',
+                order: 3,
+            },
+            {
+                media: 'https://images.unsplash.com/photo-1585914641050-fa9883c4e21c?q=80&w=1000',
+                mediaType: 'image' as const,
+                linkedProductId: findProduct('womens-duppattas').id,
+                title: 'Dupatta Collection',
+                order: 4,
+            },
+            {
+                media: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=1000',
+                mediaType: 'image' as const,
+                linkedProductId: findProduct('womens-shawls', 'rose').id,
+                title: "Women's Shawls",
+                order: 5,
+            },
+        ];
+
+        // 4. Add showcases to database
+        const batch = writeBatch(db);
+        showcasesToCreate.forEach((showcase) => {
+            const newDocRef = doc(collection(db, NEW_ARRIVALS_COLLECTION));
+            batch.set(newDocRef, {
+                ...showcase,
+                createdAt: Timestamp.now(),
+                updatedAt: Timestamp.now(),
+            });
+        });
+        await batch.commit();
+
+        console.log(`Successfully seeded ${showcasesToCreate.length} New Arrival showcases.`);
+        return true;
+    } catch (error) {
+        console.error('Error seeding new arrivals:', error);
+        return false;
+    }
+}
+
 
 // ==========================================
 // SITE SETTINGS
@@ -540,6 +706,17 @@ export async function deleteReview(id: string): Promise<boolean> {
     }
 }
 
+export async function updateReview(id: string, updates: Partial<Review>): Promise<boolean> {
+    try {
+        const docRef = doc(db, REVIEWS_COLLECTION, id);
+        await updateDoc(docRef, updates);
+        return true;
+    } catch (error) {
+        console.error('Error updating review:', error);
+        return false;
+    }
+}
+
 // SEEDING SCRIPT
 import { writeBatch } from 'firebase/firestore';
 import { Review } from './types'; // Ensure Review is imported
@@ -568,47 +745,154 @@ export async function seedReviews(): Promise<boolean> {
         const reviewsToCreate: Omit<Review, 'id'>[] = [];
         const distribution = { 5: 90, 4: 24, 3: 10 };
 
+        // 80+ Random Pakistani names (no celebrities, everyday names)
         const pakistaniNames = [
-            'Muhammad Ahmed', 'Fatima Bibi', 'Zainab Khan', 'Ali Raza', 'Sara Malik', 'Usman Gondal',
-            'Ayesha Siddiqui', 'Bilal Sheikh', 'Hassan Javid', 'Marium Tariq', 'Hamza Yousaf', 'Sadia Parveen',
-            'Omer Farooq', 'Khadija Noor', 'Ahsan Iqbal', 'Sana Mir', 'Rizwan Ahmed', 'Hira Mani', 'Fahad Mustafa',
-            'Mahira Khan', 'Atif Aslam', 'Sajal Aly', 'Bilal Abbas', 'Yumna Zaidi', 'Ahmed Ali', 'Zara Noor',
-            'Saim Ali', 'Nashit Begum', 'Tariq Jameel', 'Wasim Akram', 'Shoaib Akhtar', 'Shahid Afridi', 'Babar Azam'
+            // Male Names
+            'Kamran Ashraf', 'Nadeem Malik', 'Imran Qureshi', 'Waqar Hussain', 'Rashid Mahmood',
+            'Zahid Iqbal', 'Arif Khan', 'Khalid Mehmood', 'Tariq Aziz', 'Naveed Ahmed',
+            'Faisal Rauf', 'Adnan Siddiqui', 'Mohsin Ali', 'Junaid Hassan', 'Salman Rafiq',
+            'Amir Shahzad', 'Irfan Bashir', 'Shahbaz Gill', 'Naeem Butt', 'Asad Mirza',
+            'Furqan Javed', 'Hamid Rana', 'Waseem Akbar', 'Bilal Riaz', 'Farhan Saeed',
+            'Aqeel Abbasi', 'Sajid Nawaz', 'Tanveer Aslam', 'Shafiq Rehman', 'Mazhar Abbas',
+            'Zubair Ghouri', 'Rehan Chaudhry', 'Pervaiz Elahi', 'Kashif Anwar', 'Manzoor Ahmad',
+            'Sabir Hussain', 'Ghulam Mustafa', 'Jameel Akhtar', 'Noman Ejaz', 'Shakeel Butt',
+            // Female Names
+            'Tahira Begum', 'Rubina Khatoon', 'Asma Farooq', 'Samina Bibi', 'Bushra Perveen',
+            'Nazia Batool', 'Shabana Gul', 'Saima Akhtar', 'Farzana Naz', 'Uzma Rashid',
+            'Razia Sultana', 'Kausar Parveen', 'Nasreen Akhtar', 'Shagufta Jabeen', 'Rukhsana Bibi',
+            'Parveen Akhtar', 'Salma Begum', 'Firdous Bano', 'Ghazala Noor', 'Mehwish Hayat',
+            'Iqra Aziz', 'Hina Sultan', 'Amina Tariq', 'Zareena Malik', 'Nighat Aslam',
+            'Rehana Yasmeen', 'Abida Parveen', 'Sughra Bibi', 'Nusrat Fatima', 'Kishwar Naheed',
+            'Zakia Masood', 'Meher Bano', 'Shamim Ara', 'Zubaida Begum', 'Tabassum Riaz',
+            'Naseem Akhtar', 'Saadia Afzal', 'Farida Khanum', 'Yasmeen Shah', 'Rabia Butt',
+            // Mixed variations
+            'M. Akram', 'S. Kamal', 'A. Rehman', 'Haji Bashir', 'Ch. Nazir', 'Malik Asghar'
         ];
 
+        // 50+ Roman Urdu 5-Star Reviews (Authentic Pakistani style)
         const romanUrdu5Star = [
-            "Bohat alaw product tha", "Quality bohat zabardast hai", "Bilkul waisa hi hai jaisa dikhaya tha",
-            "Highly recommended, maza aa gaya", "Fabric bohat soft hai, very comfortable", "Delivery bht fast thi, shukriya",
-            "Packaging bohat achi thi, premium feel aya", "Gift k liye liya tha, sab ko pasand aya", "Value for money hai amazing",
-            "Sands Collections never disappoints, love it!", "Behtareen chiz hai, zaroor try karein", "Next time phir order karunga InshaAllah",
-            "Color same waisa hi hai pic jaisa", "Size perfect aya hai", "Customer service bohat cooperative hai",
-            "Maza aa gaya quality dekh k", "Bohat pyara suit hai", "Khushboo bohat achi hai (fragrance)",
-            "Shawl ki quality outclass hai", "10/10 quality", "Dil khush ho gaya parcel khol k", "Original premium quality hai",
-            "Bht acha experience raha apke sath", "JazakAllah, bohat achi cheez bheji hai", "Sub se best online store hai Pakistan ka",
-            "Finishing bohat neat hai", "Kapra kharab nahi hua wash k baad bhi", "Achi cheez hai, paise pure ho gaye"
+            "Masha Allah bohat zabardast quality hai, bilkul expectations se barh kar mila",
+            "Bahut hi shandar product mila, packing bhi behtareen thi, shukriya",
+            "Sach mein premium quality hai, dil khush ho gaya order dekh k",
+            "Delivery time perfect, product original, full marks deta hun",
+            "Pehle online shopping se darta tha lekin ye store trustworthy hai",
+            "Bohat pyara piece aya hai, ghar walo ko bhi bohat pasand aya",
+            "Fabric ki quality lajawab hai, price k hisab se bohat acha deal mila",
+            "Next time phir yahi se order karunga InshaAllah, highly recommended",
+            "Color bilkul pic jaisa aya, size bhi perfect fit hua",
+            "Customer care bohat helpful hai, response time bhi acha hai",
+            "Gift k liye lia tha, receiver bohat khush hua, thank you Sands",
+            "Kapre ka material premium lagta hai, stitching bhi neat hai",
+            "Eid k liye order kia tha, time pe mil gaya AlhamduliLlah",
+            "Ye mera teesra order hai, kabhi disappoint nahi kiya",
+            "Mehngi cheez hai lekin quality k liye paisa worth it hai",
+            "Bohat satisfied hun, return customer ban gaya hun main",
+            "Shawl ki warmth zabardast hai, kashmiri feel aata hai",
+            "Original product mila, fake nahi hai, verified buyer hun",
+            "Packaging itni premium thi k gift wrap ki zaroorat nahi pari",
+            "Doston ko bhi recommend kar dia hai, sab ne order kia",
+            "Fragrance bohat subtle hai, pure day rehti hai, loved it",
+            "Material breathable hai, summer mein bhi comfortable hai",
+            "Embroidery ka kaam bohat fine hai, hand work lagta hai",
+            "Delivery boy ne proper handle kia, crease bhi nahi aya",
+            "Exchange process bhi easy hai, no hassle return policy",
+            "Website pe jo dikhaya wahi mila, koi cheating nahi",
+            "Affordable price mein premium quality, rare combination hai",
+            "Lahore mein next day delivery mil gayi, impressed hun",
+            "Mummy k liye lia tha, unko bohat pasand aya, happy customer",
+            "Ye brand fake nahi bechta, verified ho k order karo",
+            "Itni soft fabric pehle nahi dekhi, skin k sath comfortable hai",
+            "Winter collection bohat acha hai, variety bhi achi hai",
+            "Payment methods easy hain, COD available hai jo plus point hai",
+            "WhatsApp pe baat ki, bohat polite staff hai",
+            "Trustworthy store hai, scam nahi hai, order karo without fear",
+            "Product photos se bhi better nikla asli mein",
+            "Repeat order hai, pehle bhi yehi quality mili thi",
+            "JazakAllah for genuine products, rare hai ye Pakistani market mein",
+            "Suit ka fabric bohat acha hai, tailor bhi praise kar raha tha",
+            "Stitched products bhi available hain jo convenient hai",
+            "Bhai k liye shawl lia, usne bohat tarif ki quality ki",
+            "Premium feel ata hai product mein, cheap nahi lagta",
+            "Fast delivery, original product, 5 stars deserve karta hai",
+            "Bohat carefully packed tha, koi damage nahi tha",
+            "Ye store recommend karta hun sabko, fraud nahi hai",
+            "Affordable luxury mil gayi, bohot khush hun",
+            "Dupatta bohat elegant hai, function mein compliments mile",
+            "Ihram ki quality soft hai, Umrah k liye perfect hai",
+            "Perfume ki khushboo long lasting hai, value for money",
+            "First order tha aur experience acha raha, will order again"
         ];
 
+        // 20+ Roman Urdu 4-Star Reviews
         const romanUrdu4Star = [
-            "Cheez achi hai bas delivery late thi", "Product acha hai lekin color thora light hai", "Quality achi hai price k hisab se",
-            "Acha hai magar packaging behtar ho sakti thi", "Overall good experience but size issue tha thora", "Recommended hai, bas thora mehnga hai",
-            "Fabric acha hai, design bhi pyara hai", "Liked it, will order again", "Sahi hai, bura nahi hai", "Good product, bas packing improve karein"
+            "Product achi hai, bas shipping thori late ho gayi thi",
+            "Quality mast hai, color thora different hai pics se lekin okay hai",
+            "Cheez achi mili lekin packaging behtar ho sakti thi thori",
+            "Overall good experience, size chart confusing thi bas",
+            "Recommended hai, but price thori zyada hai market se",
+            "Fabric acha hai, design bhi pyara hai, minor issues hain",
+            "Liked it, bas delivery mein 2 din extra lag gaye",
+            "Sahi hai product, customer service thori slow thi",
+            "Material acha hai, bas ironing ki zaroorat pari",
+            "Good quality mil gayi, bas exchange process lengthy tha",
+            "Shawl achi hai, bas color shade thora dark tha",
+            "Product genuine hai, communication improve ho sakti hai",
+            "Paise ka worth hai, 4 stars isliye k ek button missing tha",
+            "Suit acha aya, lekin salwar ka fit thora loose tha",
+            "Fragrance achi hai, bas bottle thori choti thi",
+            "Order track karna mushkil tha, product theek aya",
+            "Quality premium hai, bass COD charges extra lage the",
+            "Achi cheez hai, next time size chart dekh k order karunga",
+            "Liked the product, packaging could be more eco-friendly",
+            "Good value, minor delay in shipping but worth it"
         ];
 
+        // 15+ Roman Urdu 3-Star Reviews
         const romanUrdu3Star = [
-            "Thik hai bas", "Itna khaas nahi laga mujhe", "Delivery bohat late thi", "Pic me color different lag raha tha",
-            "Quality okay hai, extra ordinary nahi", "Average product hai", "Price thori zyada hai quality k hisab se",
-            "Guzara hai", "Not bad but expected better", "Thik hai kaam chal jaye ga"
+            "Thik hai bas, bohat khaas nahi laga mujhe honestly",
+            "Delivery bohat late thi, hafte lag gaye",
+            "Pic me color different lag raha tha, thora disappointed",
+            "Quality okay hai, extra ordinary nahi hai yaar",
+            "Average product hai, isse behtar mil sakta tha",
+            "Price thori zyada hai quality k hisab se frankly",
+            "Guzara hai, kaam chal jayega abhi k liye",
+            "Not bad but expected better at this price point",
+            "Thik hai, use ho jayega, nothing special",
+            "Material average hai, premium nahi lagta",
+            "Size issue tha, exchange ki request pending hai",
+            "Product okay hai, photos se thora different mila",
+            "Theek hai, ek do jagah stitching loose thi",
+            "Expected more for the price, average quality",
+            "Ordinary hai, kuch special nahi hai ismein"
         ];
 
-        const generateReview = (rating: number): Omit<Review, 'id'> => {
+        // 12 Pure Urdu Script Reviews (Mix of ratings)
+        const urduScriptReviews = [
+            { comment: "ماشاءاللہ بہت عمدہ کوالٹی ہے، پیکنگ بھی زبردست تھی", rating: 5 },
+            { comment: "بہت اچھی چیز ہے، سب کو پسند آئی، شکریہ", rating: 5 },
+            { comment: "ڈلیوری وقت پر ملی، پروڈکٹ اصلی تھا", rating: 5 },
+            { comment: "بہترین شال ہے، سردیوں کے لیے بالکل ٹھیک", rating: 5 },
+            { comment: "قیمت کے حساب سے بہت اچھا سودا ہے", rating: 5 },
+            { comment: "پہلی بار آرڈر کیا، تجربہ اچھا رہا الحمدللہ", rating: 5 },
+            { comment: "خوشبو بہت پیاری ہے، دیر تک رہتی ہے", rating: 5 },
+            { comment: "کپڑے کی کوالٹی اچھی ہے، رنگ بھی ٹھیک ہے", rating: 4 },
+            { comment: "چیز ٹھیک ہے، ڈلیوری میں تھوڑی دیر ہوئی", rating: 4 },
+            { comment: "اچھا ہے لیکن قیمت تھوڑی زیادہ لگی", rating: 4 },
+            { comment: "ٹھیک ہے، توقع سے کم تھا صادقانہ طور پر", rating: 3 },
+            { comment: "اوسط کوالٹی ہے، بہت خاص نہیں", rating: 3 }
+        ];
+
+        const generateReview = (rating: number, specificComment?: string): Omit<Review, 'id'> => {
             const product = products[Math.floor(Math.random() * products.length)];
             const name = pakistaniNames[Math.floor(Math.random() * pakistaniNames.length)];
 
-            let commentsPool = romanUrdu5Star;
-            if (rating === 4) commentsPool = romanUrdu4Star;
-            if (rating === 3) commentsPool = romanUrdu3Star;
-
-            const comment = commentsPool[Math.floor(Math.random() * commentsPool.length)];
+            let comment = specificComment;
+            if (!comment) {
+                let commentsPool = romanUrdu5Star;
+                if (rating === 4) commentsPool = romanUrdu4Star;
+                if (rating === 3) commentsPool = romanUrdu3Star;
+                comment = commentsPool[Math.floor(Math.random() * commentsPool.length)];
+            }
 
             // Random date within last 6 months
             const date = new Date();
@@ -626,13 +910,28 @@ export async function seedReviews(): Promise<boolean> {
             };
         };
 
-        // Create reviews array
-        for (let i = 0; i < distribution[5]; i++) reviewsToCreate.push(generateReview(5));
-        for (let i = 0; i < distribution[4]; i++) reviewsToCreate.push(generateReview(4));
-        for (let i = 0; i < distribution[3]; i++) reviewsToCreate.push(generateReview(3));
+        // Create reviews array - First add the Urdu script reviews
+        urduScriptReviews.forEach(ur => {
+            reviewsToCreate.push(generateReview(ur.rating, ur.comment));
+        });
 
-        // Start Batch Writes (Batch size limit is 500, we have 124, so one batch is fine? No, Firestore batch is 500 ops)
-        // We will do chunks of 100 just to be safe and clean
+        // Then generate remaining reviews to reach 124 total
+        // We have 12 Urdu reviews, need: 90-7=83 five-star, 24-3=21 four-star, 10-2=8 three-star
+        const remaining5Star = distribution[5] - 7; // 7 Urdu 5-star reviews
+        const remaining4Star = distribution[4] - 3; // 3 Urdu 4-star reviews  
+        const remaining3Star = distribution[3] - 2; // 2 Urdu 3-star reviews
+
+        for (let i = 0; i < remaining5Star; i++) reviewsToCreate.push(generateReview(5));
+        for (let i = 0; i < remaining4Star; i++) reviewsToCreate.push(generateReview(4));
+        for (let i = 0; i < remaining3Star; i++) reviewsToCreate.push(generateReview(3));
+
+        // Shuffle the reviews array
+        for (let i = reviewsToCreate.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [reviewsToCreate[i], reviewsToCreate[j]] = [reviewsToCreate[j], reviewsToCreate[i]];
+        }
+
+        // Start Batch Writes
         const chunkSize = 100;
         for (let i = 0; i < reviewsToCreate.length; i += chunkSize) {
             const chunk = reviewsToCreate.slice(i, i + chunkSize);
@@ -651,6 +950,7 @@ export async function seedReviews(): Promise<boolean> {
         return false;
     }
 }
+
 
 // ==========================================
 // STATS / ANALYTICS

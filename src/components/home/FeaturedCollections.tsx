@@ -11,11 +11,11 @@ import { convertDriveLink } from '@/lib/utils';
 // Default featured collections when database is empty
 const defaultFeatured: FeaturedCollection[] = [
     {
-        id: 'mens-shawls',
-        title: "Men's Shawls",
-        subtitle: 'Premium Pashmina',
+        id: 'mens-collection',
+        title: "Men's Collection",
+        subtitle: 'Shawls & Suiting',
         image: 'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?q=80&w=800',
-        href: '/men/shawls',
+        href: '/men',
         span: 'large',
         order: 0,
     },
@@ -38,11 +38,11 @@ const defaultFeatured: FeaturedCollection[] = [
         order: 2,
     },
     {
-        id: 'womens-shawls',
-        title: "Women's Shawls",
-        subtitle: 'Elegant Wraps',
+        id: 'womens-collection',
+        title: "Women's Collection",
+        subtitle: 'Shawls & Duppattas',
         image: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800',
-        href: '/women/shawls',
+        href: '/women',
         span: 'large',
         order: 3,
     },

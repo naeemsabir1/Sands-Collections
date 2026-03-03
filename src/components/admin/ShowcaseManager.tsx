@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Edit, Trash2, X, Save, Loader2, RefreshCw, Sparkles, Video, Image as ImageIcon } from 'lucide-react';
 import { NewArrivalShowcase, Product, ProductCategory } from '@/lib/types';
 import { convertDriveLink } from '@/lib/utils';
-import { getNewArrivalShowcases, addNewArrivalShowcase, updateNewArrivalShowcase, deleteNewArrivalShowcase, getProducts } from '@/lib/firestore';
+import { getNewArrivalShowcases, addNewArrivalShowcase, updateNewArrivalShowcase, deleteNewArrivalShowcase, getProducts, seedNewArrivals } from '@/lib/firestore';
 import Image from 'next/image';
 
 const productCategories: { value: ProductCategory; label: string }[] = [
@@ -25,6 +25,7 @@ export function ShowcaseManager() {
     const [products, setProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
+    const [isSeeding, setIsSeeding] = useState(false);
     const [isAddingShowcase, setIsAddingShowcase] = useState(false);
     const [editingShowcase, setEditingShowcase] = useState<NewArrivalShowcase | null>(null);
 
@@ -223,7 +224,30 @@ export function ShowcaseManager() {
                 <div className="py-24 text-center bg-white rounded-3xl border border-dashed border-gray-200">
                     <Sparkles size={48} className="mx-auto text-gray-200 mb-4" />
                     <p className="text-lg font-medium text-charcoal">No showcases yet</p>
-                    <p className="text-medium-gray">Create visual highlights for your new arrivals.</p>
+                    <p className="text-medium-gray mb-6">Create visual highlights for your new arrivals.</p>
+                    <button
+                        onClick={async () => {
+                            if (confirm('This will create 6 default showcases linked to your products. Continue?')) {
+                                setIsSeeding(true);
+                                const success = await seedNewArrivals();
+                                setIsSeeding(false);
+                                if (success) {
+                                    alert('✅ Successfully created 6 New Arrival showcases!');
+                                    loadData();
+                                } else {
+                                    alert('❌ Failed to seed showcases. Please try again.');
+                                }
+                            }
+                        }}
+                        disabled={isSeeding}
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-gold-primary text-white rounded-xl hover:bg-gold-dark transition-all font-medium disabled:opacity-50"
+                    >
+                        {isSeeding ? (
+                            <><Loader2 size={18} className="animate-spin" /> Creating Showcases...</>
+                        ) : (
+                            <><Sparkles size={18} /> Seed Default Showcases</>
+                        )}
+                    </button>
                 </div>
             )}
 

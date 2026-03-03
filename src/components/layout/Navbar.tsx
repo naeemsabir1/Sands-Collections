@@ -120,9 +120,9 @@ export function Navbar() {
 
                         {/* Logo - Animated Reveal */}
                         <Link href="/" className="flex-shrink-0 group relative overflow-hidden">
-                            <h1 className="font-playfair text-2xl md:text-3xl font-bold tracking-tight">
+                            <h1 className="font-playfair text-xl md:text-2xl font-bold tracking-tight">
                                 <span className="text-charcoal group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-charcoal group-hover:to-gold-dark transition-all duration-500">SANDS</span>
-                                <span className="text-gold-primary group-hover:text-gold-dark transition-colors duration-500">.</span>
+                                <span className="text-gold-primary ml-1.5 group-hover:text-gold-dark transition-colors duration-500">COLLECTIONS</span>
                             </h1>
                             <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gold-primary transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
                         </Link>
