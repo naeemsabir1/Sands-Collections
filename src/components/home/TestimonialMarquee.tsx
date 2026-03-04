@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, Variants } from 'framer-motion';
-import { Star, CheckCircle, ArrowRight } from 'lucide-react';
+import { Star, ArrowRight, Quote, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Review } from '@/lib/types';
@@ -63,7 +63,7 @@ export function TestimonialMarquee() {
                     // Take top reviews (4-5 stars) for the marquee
                     const topReviews = reviews
                         .filter((r: Review) => r.rating >= 4)
-                        .slice(0, 14) // Get enough for two rows
+                        .slice(0, 10) // Limit for exclusivity
                         .map((r: Review) => ({
                             id: r.id,
                             userName: r.userName,
@@ -84,72 +84,66 @@ export function TestimonialMarquee() {
         fetchReviews();
     }, []);
 
-    // Split testimonials into two rows
-    const midPoint = Math.ceil(testimonials.length / 2);
-    const row1 = testimonials.slice(0, midPoint);
-    const row2 = testimonials.slice(midPoint);
+    // Double the array for seamless infinite scrolling
+    const marqueeItems = [...testimonials, ...testimonials, ...testimonials];
 
     return (
-        <section className="bg-[#111111] py-20 overflow-hidden relative">
-            {/* Ambient Gradient Background */}
-            <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] pointer-events-none" />
+        <section className="bg-[#050505] py-24 md:py-32 overflow-hidden relative">
+            {/* Ambient Lighting & Noise */}
+            <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#D4AF77]/20 to-transparent" />
+            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.04] pointer-events-none mix-blend-overlay" />
 
-            <div className="container mx-auto px-4 lg:px-8 mb-12 relative z-10 text-center">
+            {/* Soft Radial Gold Glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#D4AF77]/[0.02] rounded-full blur-[120px] pointer-events-none" />
+
+            <div className="container mx-auto px-4 lg:px-8 mb-16 relative z-10 flex flex-col items-center text-center">
                 <motion.div
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: true }}
+                    viewport={{ once: true, margin: "-100px" }}
                     variants={containerVariants}
+                    className="flex flex-col items-center"
                 >
-                    <div className="inline-block px-4 py-1.5 rounded-full border border-gold-primary/30 bg-gold-primary/10 backdrop-blur-md mb-6">
-                        <span className="text-[10px] md:text-xs font-bold tracking-[0.2em] text-gold-primary uppercase flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-gold-primary animate-pulse" />
+                    <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-[#D4AF77]/20 bg-[#D4AF77]/5 backdrop-blur-md mb-8">
+                        <span className="relative flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D4AF77] opacity-40"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#D4AF77]/80"></span>
+                        </span>
+                        <span className="text-[9px] md:text-[10px] font-bold tracking-[0.3em] text-[#D4AF77] uppercase mt-0.5">
                             Trusted by Thousands
                         </span>
                     </div>
 
-                    <h2 className="font-playfair text-3xl md:text-5xl font-bold text-white mb-4">
-                        Words from our <span className="text-gold-primary italic">Community</span>
+                    <h2 className="font-sans text-3xl md:text-5xl font-light tracking-tight text-white mb-4">
+                        Words from our <span className="font-playfair text-[#D4AF77] italic tracking-normal">Community</span>
                     </h2>
+                    <div className="w-16 h-px bg-gradient-to-r from-transparent via-[#D4AF77]/50 to-transparent mt-4" />
                 </motion.div>
             </div>
 
-            {/* Marquee Container - Two Rows */}
-            <div className="relative flex flex-col gap-8 md:gap-10">
-                {/* Gradient Masks - Enhanced */}
-                <div className="absolute left-0 top-0 bottom-0 w-24 md:w-64 z-10 bg-gradient-to-r from-[#111111] via-[#111111]/80 to-transparent pointer-events-none" />
-                <div className="absolute right-0 top-0 bottom-0 w-24 md:w-64 z-10 bg-gradient-to-l from-[#111111] via-[#111111]/80 to-transparent pointer-events-none" />
+            {/* Premium Marquee Container */}
+            <div className="relative flex overflow-hidden group py-10">
+                {/* Harsh edge masks for the cinematic fade-out effect */}
+                <div className="absolute left-0 top-0 bottom-0 w-32 md:w-80 z-20 bg-gradient-to-r from-[#050505] via-[#050505]/80 to-transparent pointer-events-none" />
+                <div className="absolute right-0 top-0 bottom-0 w-32 md:w-80 z-20 bg-gradient-to-l from-[#050505] via-[#050505]/80 to-transparent pointer-events-none" />
 
-                {/* Row 1 - Scroll Left */}
-                <div className="flex overflow-hidden group">
-                    <div className="flex gap-6 animate-scroll-left group-hover:pause-animation min-w-full px-3 transform-gpu">
-                        {[...row1, ...row1].map((t, i) => (
-                            <div key={`${t.id}-1-${i}`} className="flex-shrink-0 w-[300px] md:w-[420px]">
-                                <ReviewCard review={t} />
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Row 2 - Scroll Right */}
-                <div className="flex overflow-hidden group">
-                    <div className="flex gap-6 animate-scroll-right group-hover:pause-animation min-w-full px-3 transform-gpu">
-                        {[...row2, ...row2].map((t, i) => (
-                            <div key={`${t.id}-2-${i}`} className="flex-shrink-0 w-[300px] md:w-[420px]">
-                                <ReviewCard review={t} />
-                            </div>
-                        ))}
-                    </div>
+                <div className="flex gap-6 md:gap-8 animate-scroll-left group-hover:pause-animation min-w-full px-4 transform-gpu select-none">
+                    {marqueeItems.map((t, i) => (
+                        <div key={`${t.id}-${i}`} className="flex-shrink-0 w-[340px] md:w-[480px]">
+                            <ReviewCard review={t} />
+                        </div>
+                    ))}
                 </div>
             </div>
 
             {/* See All Button */}
-            <div className="text-center mt-12 relative z-10">
+            <div className="text-center mt-20 relative z-10 flex justify-center">
                 <Link href="/reviews">
-                    <button className="group relative px-8 py-3 bg-white text-charcoal font-medium rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-                        <span className="relative z-10 flex items-center gap-2">
-                            View All Reviews <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                    <button className="group relative inline-flex items-center justify-center px-8 py-4 bg-transparent text-[#D4AF77] font-medium tracking-widest uppercase text-xs overflow-hidden transition-all duration-500 rounded-none border border-[#D4AF77]/30 hover:border-[#D4AF77]">
+                        <span className="absolute inset-0 w-full h-full bg-[#D4AF77]/5 group-hover:bg-[#D4AF77]/10 transition-colors duration-500" />
+                        <span className="relative z-10 flex items-center gap-3 tracking-[0.15em]">
+                            View All Reviews
+                            <ArrowRight size={16} strokeWidth={1.5} className="group-hover:translate-x-1 transition-transform duration-300" />
                         </span>
                     </button>
                 </Link>
@@ -160,34 +154,53 @@ export function TestimonialMarquee() {
 
 function ReviewCard({ review }: { review: TestimonialItem }) {
     return (
-        <div className="bg-[#1A1A1A] p-6 rounded-2xl border border-white/5 hover:border-gold-primary/20 transition-all duration-300 h-full flex flex-col justify-between">
-            <div>
-                <div className="flex items-center justify-between mb-4">
-                    <div className="flex gap-1">
-                        {[1, 2, 3, 4, 5].map(s => (
-                            <Star
-                                key={s}
-                                size={14}
-                                className={s <= review.rating ? "fill-gold-primary text-gold-primary" : "fill-gray-600 text-gray-600"}
-                            />
-                        ))}
-                    </div>
-                    <div className="flex items-center gap-1 bg-green-500/10 px-2 py-1 rounded text-[10px] font-bold tracking-wider text-green-500 uppercase">
-                        <CheckCircle size={10} /> Verified
-                    </div>
+        <div className="relative bg-gradient-to-br from-[#121212] to-[#0A0A0A] p-8 md:p-10 rounded-sm border border-white/[0.03] hover:border-[#D4AF77]/[0.15] transition-all duration-500 h-[320px] flex flex-col justify-between group overflow-hidden shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
+
+            {/* Background Decorative Quote Mark */}
+            <Quote className="absolute -top-4 -right-2 w-32 h-32 text-white/[0.02] transform -rotate-12 group-hover:scale-110 group-hover:text-[#D4AF77]/[0.03] transition-all duration-700 pointer-events-none" />
+
+            {/* Top Shine */}
+            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+            <div className="relative z-10">
+                {/* Rating Stars */}
+                <div className="flex gap-1.5 mb-8">
+                    {[1, 2, 3, 4, 5].map(s => (
+                        <Star
+                            key={s}
+                            size={12}
+                            strokeWidth={1}
+                            className={s <= review.rating ? "fill-[#D4AF77] text-[#D4AF77]" : "fill-white/10 text-white/10"}
+                        />
+                    ))}
                 </div>
-                <p className="text-white/80 text-sm md:text-base leading-relaxed italic mb-6">
+
+                {/* Review Text */}
+                <p className="font-playfair text-white/[0.85] text-lg md:text-[22px] leading-[1.7] italic font-light drop-shadow-md">
                     "{review.comment}"
                 </p>
             </div>
 
-            <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center text-white/50 font-bold text-sm">
-                    {review.userName.charAt(0)}
-                </div>
-                <div>
-                    <h4 className="text-white font-medium text-sm">{review.userName}</h4>
-                    <p className="text-white/40 text-xs">Verified Customer</p>
+            <div className="relative z-10 mt-8 pt-8 border-t border-white/[0.04]">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        {/* Avatar */}
+                        <div className="w-11 h-11 rounded-full border border-[#D4AF77]/30 bg-[#0A0A0A] flex items-center justify-center text-[#D4AF77] font-sans font-light text-sm shadow-[0_0_15px_rgba(212,175,119,0.1)]">
+                            {review.userName.charAt(0).toUpperCase()}
+                        </div>
+                        {/* Name & Title */}
+                        <div className="flex flex-col gap-1">
+                            <h4 className="text-white/90 font-sans tracking-wide text-[13px] md:text-sm font-medium">
+                                {review.userName}
+                            </h4>
+                            <p className="text-white/40 text-[10px] uppercase tracking-[0.2em]">Verified</p>
+                        </div>
+                    </div>
+
+                    {/* Golden Verification Badge */}
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[#D4AF77]/10 text-[#D4AF77]">
+                        <ShieldCheck size={16} strokeWidth={1.5} />
+                    </div>
                 </div>
             </div>
         </div>
