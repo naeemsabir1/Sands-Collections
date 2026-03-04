@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { ArrowDown, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -50,25 +50,28 @@ export function HeroSlider() {
     return (
         <section className="relative h-[90vh] min-h-[600px] w-full overflow-hidden bg-[#0F0F0F] -mt-20 md:-mt-24">
             {/* Cinematic Background with Crossfade */}
-            <AnimatePresence mode="popLayout">
+            {HERO_IMAGES.map((src, index) => (
                 <motion.div
-                    key={currentIndex}
+                    key={src}
                     initial={{ opacity: 0, scale: 1.05 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0 }}
+                    animate={{
+                        opacity: currentIndex === index ? 1 : 0,
+                        scale: currentIndex === index ? 1 : 1.05
+                    }}
                     transition={{ duration: 1.5, ease: "easeInOut" }}
                     className="absolute inset-0 z-0 origin-center"
+                    style={{ pointerEvents: currentIndex === index ? 'auto' : 'none' }}
                 >
                     <Image
-                        src={HERO_IMAGES[currentIndex]}
-                        alt={`Sands Collections Hero ${currentIndex + 1}`}
+                        src={src}
+                        alt={`Sands Collections Hero ${index + 1}`}
                         fill
                         className="object-cover object-center"
-                        priority={currentIndex === 0}
+                        priority={index === 0}
                         quality={90}
                     />
                 </motion.div>
-            </AnimatePresence>
+            ))}
 
             {/* Dark gradient overlay (Optimized for performance) */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/20 z-0 pointer-events-none" />
@@ -110,11 +113,11 @@ export function HeroSlider() {
                         {/* CTA Button */}
                         <motion.div variants={itemVariants}>
                             <Link
-                                href="/products"
+                                href="#featured-collections"
                                 className="group relative inline-flex items-center justify-center px-8 py-4 bg-[#D4AF77] text-black font-semibold uppercase tracking-widest text-xs md:text-sm overflow-hidden transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] rounded-none z-10"
                             >
                                 <span className="relative z-10 flex items-center gap-2">
-                                    Shop the Collection
+                                    Order now
                                     <ArrowRight size={16} className="group-hover:translate-x-1.5 transition-transform duration-300" />
                                 </span>
                                 {/* Shine Effect */}

@@ -82,7 +82,7 @@ export function FeaturedCollections({ collections: propCollections }: FeaturedCo
     };
 
     return (
-        <section className="section bg-off-white py-20 md:py-28">
+        <section id="featured-collections" className="section bg-off-white py-20 md:py-28">
             <div className="container mx-auto px-4 lg:px-8">
                 {/* Section Header */}
                 <motion.div

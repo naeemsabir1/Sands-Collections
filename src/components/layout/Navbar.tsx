@@ -15,6 +15,7 @@ import {
 import Image from 'next/image';
 import { useCart } from '@/contexts/CartContext';
 import { SearchModal } from './SearchModal';
+import { LogoIcon } from '@/components/ui/LogoIcon';
 
 const categories = [
     {
@@ -109,21 +110,15 @@ export function Navbar() {
 
                         {/* Logo Area */}
                         <Link href="/" className="flex items-center gap-3 lg:gap-4 group">
-                            {/* Logo Image Placeholder (User will replace sands-logo.png) */}
-                            <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border border-[#D4AF77]/30 group-hover:border-[#D4AF77] transition-all duration-500 bg-white/5 backdrop-blur-sm shadow-[0_0_15px_rgba(212,175,119,0.1)] shrink-0 flex items-center justify-center p-1">
-                                <Image
-                                    src="/sands-logo.png"
-                                    alt="Sands Collections Logo"
-                                    fill
-                                    sizes="(max-width: 768px) 40px, 48px"
-                                    className="object-contain"
-                                />
+                            {/* Premium Logo Icon */}
+                            <div className="relative w-10 h-10 md:w-12 md:h-12 shrink-0 flex items-center justify-center text-[#D4AF77] group-hover:text-white transition-colors duration-500 group-hover:drop-shadow-[0_0_8px_rgba(212,175,119,0.8)]">
+                                <LogoIcon className="w-full h-full" />
                             </div>
                             <div className="flex flex-col items-center lg:items-start group cursor-pointer">
-                                <h1 className="font-playfair text-xl md:text-2xl lg:text-[28px] font-bold tracking-tight text-[#D4AF77] group-hover:text-white transition-colors duration-500 whitespace-nowrap">
-                                    SANDS <span className="font-light">COLLECTIONS</span>
+                                <h1 className="font-playfair text-2xl md:text-3xl lg:text-[34px] font-semibold tracking-wide text-[#D4AF77] group-hover:text-[#F3E5AB] transition-colors duration-500 whitespace-nowrap drop-shadow-md">
+                                    SANDS <span className="font-light italic tracking-normal">Collections</span>
                                 </h1>
-                                <p className="text-[8px] md:text-[9.5px] font-medium tracking-[0.3em] uppercase text-[#FFFDD0] opacity-80 mt-0.5 whitespace-nowrap">
+                                <p className="text-[9px] md:text-[10px] font-light tracking-[0.4em] uppercase text-[#FFFDD0]/90 mt-1 whitespace-nowrap">
                                     Timeless Pakistani Luxury
                                 </p>
                             </div>
