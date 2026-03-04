@@ -88,15 +88,15 @@ export function TestimonialMarquee() {
     const marqueeItems = [...testimonials, ...testimonials, ...testimonials];
 
     return (
-        <section className="bg-[#050505] py-24 md:py-32 overflow-hidden relative">
+        <section className="bg-[#050505] py-16 md:py-20 overflow-hidden relative">
             {/* Ambient Lighting & Noise */}
             <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#D4AF77]/20 to-transparent" />
             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.04] pointer-events-none mix-blend-overlay" />
 
             {/* Soft Radial Gold Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#D4AF77]/[0.02] rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[#D4AF77]/[0.02] rounded-full blur-[100px] pointer-events-none" />
 
-            <div className="container mx-auto px-4 lg:px-8 mb-16 relative z-10 flex flex-col items-center text-center">
+            <div className="container mx-auto px-4 lg:px-8 mb-12 relative z-10 flex flex-col items-center text-center">
                 <motion.div
                     initial="hidden"
                     whileInView="visible"
@@ -104,17 +104,17 @@ export function TestimonialMarquee() {
                     variants={containerVariants}
                     className="flex flex-col items-center"
                 >
-                    <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-[#D4AF77]/20 bg-[#D4AF77]/5 backdrop-blur-md mb-8">
-                        <span className="relative flex h-2 w-2">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#D4AF77]/20 bg-[#D4AF77]/5 backdrop-blur-md mb-6">
+                        <span className="relative flex h-1.5 w-1.5">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D4AF77] opacity-40"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#D4AF77]/80"></span>
+                            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#D4AF77]/80"></span>
                         </span>
-                        <span className="text-[9px] md:text-[10px] font-bold tracking-[0.3em] text-[#D4AF77] uppercase mt-0.5">
+                        <span className="text-[8px] md:text-[9px] font-medium tracking-[0.3em] text-[#D4AF77] uppercase mt-0.5">
                             Trusted by Thousands
                         </span>
                     </div>
 
-                    <h2 className="font-sans text-3xl md:text-5xl font-light tracking-tight text-white mb-4">
+                    <h2 className="font-sans text-2xl md:text-4xl font-light tracking-tight text-white mb-3">
                         Words from our <span className="font-playfair text-[#D4AF77] italic tracking-normal">Community</span>
                     </h2>
                     <div className="w-16 h-px bg-gradient-to-r from-transparent via-[#D4AF77]/50 to-transparent mt-4" />
@@ -122,14 +122,14 @@ export function TestimonialMarquee() {
             </div>
 
             {/* Premium Marquee Container */}
-            <div className="relative flex overflow-hidden group py-10">
+            <div className="relative flex overflow-hidden group py-6">
                 {/* Harsh edge masks for the cinematic fade-out effect */}
-                <div className="absolute left-0 top-0 bottom-0 w-32 md:w-80 z-20 bg-gradient-to-r from-[#050505] via-[#050505]/80 to-transparent pointer-events-none" />
-                <div className="absolute right-0 top-0 bottom-0 w-32 md:w-80 z-20 bg-gradient-to-l from-[#050505] via-[#050505]/80 to-transparent pointer-events-none" />
+                <div className="absolute left-0 top-0 bottom-0 w-24 md:w-56 z-20 bg-gradient-to-r from-[#050505] via-[#050505]/80 to-transparent pointer-events-none" />
+                <div className="absolute right-0 top-0 bottom-0 w-24 md:w-56 z-20 bg-gradient-to-l from-[#050505] via-[#050505]/80 to-transparent pointer-events-none" />
 
-                <div className="flex gap-6 md:gap-8 animate-scroll-left group-hover:pause-animation min-w-full px-4 transform-gpu select-none">
+                <div className="flex gap-4 md:gap-6 animate-scroll-left group-hover:pause-animation min-w-full px-4 transform-gpu select-none">
                     {marqueeItems.map((t, i) => (
-                        <div key={`${t.id}-${i}`} className="flex-shrink-0 w-[340px] md:w-[480px]">
+                        <div key={`${t.id}-${i}`} className="flex-shrink-0 w-[280px] md:w-[380px]">
                             <ReviewCard review={t} />
                         </div>
                     ))}
@@ -137,9 +137,9 @@ export function TestimonialMarquee() {
             </div>
 
             {/* See All Button */}
-            <div className="text-center mt-20 relative z-10 flex justify-center">
+            <div className="text-center mt-12 relative z-10 flex justify-center">
                 <Link href="/reviews">
-                    <button className="group relative inline-flex items-center justify-center px-8 py-4 bg-transparent text-[#D4AF77] font-medium tracking-widest uppercase text-xs overflow-hidden transition-all duration-500 rounded-none border border-[#D4AF77]/30 hover:border-[#D4AF77]">
+                    <button className="group relative inline-flex items-center justify-center px-6 py-3 bg-transparent text-[#D4AF77] font-medium tracking-widest uppercase text-[10px] md:text-xs overflow-hidden transition-all duration-500 rounded-none border border-[#D4AF77]/30 hover:border-[#D4AF77]">
                         <span className="absolute inset-0 w-full h-full bg-[#D4AF77]/5 group-hover:bg-[#D4AF77]/10 transition-colors duration-500" />
                         <span className="relative z-10 flex items-center gap-3 tracking-[0.15em]">
                             View All Reviews
@@ -154,21 +154,21 @@ export function TestimonialMarquee() {
 
 function ReviewCard({ review }: { review: TestimonialItem }) {
     return (
-        <div className="relative bg-gradient-to-br from-[#121212] to-[#0A0A0A] p-8 md:p-10 rounded-sm border border-white/[0.03] hover:border-[#D4AF77]/[0.15] transition-all duration-500 h-[320px] flex flex-col justify-between group overflow-hidden shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
+        <div className="relative bg-gradient-to-br from-[#121212] to-[#0A0A0A] p-6 md:p-8 rounded-sm border border-white/[0.03] hover:border-[#D4AF77]/[0.15] transition-all duration-500 h-full min-h-[220px] flex flex-col justify-between group overflow-hidden shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
 
             {/* Background Decorative Quote Mark */}
-            <Quote className="absolute -top-4 -right-2 w-32 h-32 text-white/[0.02] transform -rotate-12 group-hover:scale-110 group-hover:text-[#D4AF77]/[0.03] transition-all duration-700 pointer-events-none" />
+            <Quote className="absolute -top-2 -right-2 w-16 h-16 text-white/[0.02] transform -rotate-12 group-hover:scale-110 group-hover:text-[#D4AF77]/[0.03] transition-all duration-700 pointer-events-none" />
 
             {/* Top Shine */}
             <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
             <div className="relative z-10">
                 {/* Rating Stars */}
-                <div className="flex gap-1.5 mb-8">
+                <div className="flex gap-1.5 mb-5 md:mb-6">
                     {[1, 2, 3, 4, 5].map(s => (
                         <Star
                             key={s}
-                            size={12}
+                            size={10}
                             strokeWidth={1}
                             className={s <= review.rating ? "fill-[#D4AF77] text-[#D4AF77]" : "fill-white/10 text-white/10"}
                         />
@@ -176,30 +176,30 @@ function ReviewCard({ review }: { review: TestimonialItem }) {
                 </div>
 
                 {/* Review Text */}
-                <p className="font-playfair text-white/[0.85] text-lg md:text-[22px] leading-[1.7] italic font-light drop-shadow-md">
+                <p className="font-playfair text-white/[0.85] text-base md:text-lg leading-[1.6] italic font-light drop-shadow-md pb-4">
                     "{review.comment}"
                 </p>
             </div>
 
-            <div className="relative z-10 mt-8 pt-8 border-t border-white/[0.04]">
+            <div className="relative z-10 mt-auto pt-6 border-t border-white/[0.04]">
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
                         {/* Avatar */}
-                        <div className="w-11 h-11 rounded-full border border-[#D4AF77]/30 bg-[#0A0A0A] flex items-center justify-center text-[#D4AF77] font-sans font-light text-sm shadow-[0_0_15px_rgba(212,175,119,0.1)]">
+                        <div className="w-8 h-8 md:w-9 md:h-9 rounded-full border border-[#D4AF77]/30 bg-[#0A0A0A] flex items-center justify-center text-[#D4AF77] font-sans font-light text-xs shadow-[0_0_15px_rgba(212,175,119,0.1)]">
                             {review.userName.charAt(0).toUpperCase()}
                         </div>
                         {/* Name & Title */}
-                        <div className="flex flex-col gap-1">
-                            <h4 className="text-white/90 font-sans tracking-wide text-[13px] md:text-sm font-medium">
+                        <div className="flex flex-col">
+                            <h4 className="text-white/90 font-sans tracking-wide text-xs md:text-[13px] font-medium">
                                 {review.userName}
                             </h4>
-                            <p className="text-white/40 text-[10px] uppercase tracking-[0.2em]">Verified</p>
+                            <p className="text-white/40 text-[9px] md:text-[10px] uppercase tracking-[0.2em] mt-0.5">Verified</p>
                         </div>
                     </div>
 
                     {/* Golden Verification Badge */}
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[#D4AF77]/10 text-[#D4AF77]">
-                        <ShieldCheck size={16} strokeWidth={1.5} />
+                    <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#D4AF77]/10 text-[#D4AF77]">
+                        <ShieldCheck size={12} strokeWidth={1.5} />
                     </div>
                 </div>
             </div>
