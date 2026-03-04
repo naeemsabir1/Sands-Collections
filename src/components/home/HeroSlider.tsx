@@ -1,274 +1,148 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, ArrowRight, Loader2 } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { ArrowDown, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { HeroSlide } from '@/lib/types';
-import { convertDriveLink } from '@/lib/utils';
 
-interface HeroSliderProps {
-    slides?: HeroSlide[];
-    isLoading?: boolean;
-}
+const HERO_IMAGES = [
+    '/hero image 1.webp',
+    '/hero image 2.webp',
+    '/hero image 3.webp',
+    '/hero image 4.png'
+];
 
-export function HeroSlider({ slides: propSlides, isLoading = false }: HeroSliderProps) {
-    const slides = propSlides && propSlides.length > 0 ? propSlides : [];
+export function HeroSlider() {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [direction, setDirection] = useState(0);
+    const [isMounted, setIsMounted] = useState(false);
 
-    // Reset to first slide when slides data changes
     useEffect(() => {
-        setCurrentIndex(0);
-    }, [propSlides?.length]);
-
-    const slideNext = useCallback(() => {
-        if (slides.length === 0) return;
-        setDirection(1);
-        setCurrentIndex((prev) => (prev + 1) % slides.length);
-    }, [slides.length]);
-
-    const slidePrev = useCallback(() => {
-        if (slides.length === 0) return;
-        setDirection(-1);
-        setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
-    }, [slides.length]);
-
-    // Auto-advance slides (only when slides exist)
-    useEffect(() => {
-        if (slides.length === 0) return;
-        const timer = setInterval(slideNext, 8000);
+        setIsMounted(true);
+        // Rotate image every 3.5 seconds for a smooth, elegant feel
+        const timer = setInterval(() => {
+            setCurrentIndex((prev) => (prev + 1) % HERO_IMAGES.length);
+        }, 3500);
         return () => clearInterval(timer);
-    }, [slideNext, slides.length]);
+    }, []);
 
-    const currentSlide = slides[currentIndex];
-
-    // Animation variants
-    const slideVariants = {
-        enter: (direction: number) => ({
-            x: direction > 0 ? 100 : -100,
-            opacity: 0,
-            scale: 1.2,
-        }),
-        center: {
-            zIndex: 1,
-            x: 0,
+    // Animation variants - Optimized
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
             opacity: 1,
-            scale: 1,
-        },
-        exit: (direction: number) => ({
-            zIndex: 0,
-            x: direction < 0 ? 100 : -100,
-            opacity: 0,
-            scale: 1,
-        }),
+            transition: {
+                staggerChildren: 0.15,
+                delayChildren: 0.3,
+            }
+        }
     };
 
-    // Show loading skeleton while fetching slides
-    if (isLoading || slides.length === 0) {
-        return (
-            <section className="relative h-[85vh] md:h-[95vh] w-full overflow-hidden bg-charcoal -mt-32 md:-mt-36">
-                {/* Animated gradient background */}
-                <div className="absolute inset-0 bg-gradient-to-br from-charcoal via-gray-900 to-black">
-                    <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03]" />
-                </div>
-
-                {/* Centered loading content */}
-                <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                    >
-                        <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full border border-gold-primary/30 bg-gold-primary/10">
-                            <Loader2 className="w-4 h-4 text-gold-primary animate-spin" />
-                            <span className="text-xs font-medium tracking-[0.2em] uppercase text-gold-light">
-                                Loading Collection
-                            </span>
-                        </div>
-
-                        <h1 className="font-playfair text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-light to-amber-500">
-                                SANDS
-                            </span>
-                            {' '}Collections
-                        </h1>
-
-                        <p className="text-white/60 text-lg max-w-md mx-auto">
-                            Discover premium Pakistani fashion
-                        </p>
-                    </motion.div>
-                </div>
-
-                {/* Subtle animated glow */}
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-gold-primary/10 rounded-full blur-3xl animate-pulse" />
-            </section>
-        );
-    }
+    const itemVariants: Variants = {
+        hidden: { opacity: 0, y: 15 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.8, ease: "easeOut" }
+        }
+    };
 
     return (
-        <section className="relative h-[85vh] md:h-[95vh] w-full overflow-hidden bg-charcoal -mt-32 md:-mt-36">
-            {/* Background Slides */}
-            <AnimatePresence initial={false} mode="popLayout" custom={direction}>
+        <section className="relative h-[90vh] min-h-[600px] w-full overflow-hidden bg-[#0F0F0F] -mt-20 md:-mt-24">
+            {/* Cinematic Background with Crossfade */}
+            <AnimatePresence mode="popLayout">
                 <motion.div
                     key={currentIndex}
-                    custom={direction}
-                    variants={slideVariants}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    transition={{
-                        x: { type: "spring", stiffness: 300, damping: 30 },
-                        opacity: { duration: 0.8 },
-                        scale: { duration: 10, ease: "linear" }
-                    }}
-                    className="absolute inset-0 z-0"
+                    initial={{ opacity: 0, scale: 1.05 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 1.5, ease: "easeInOut" }}
+                    className="absolute inset-0 z-0 origin-center"
                 >
-                    {/* Background Image */}
-                    <div className="relative w-full h-full will-change-transform">
-                        <Image
-                            src={convertDriveLink(currentSlide.image)}
-                            alt={currentSlide.title}
-                            fill
-                            className="object-cover"
-                            priority
-                            sizes="100vw"
-                        />
-                        {/* Premium Gradient Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent sm:via-black/20" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                    </div>
+                    <Image
+                        src={HERO_IMAGES[currentIndex]}
+                        alt={`Sands Collections Hero ${currentIndex + 1}`}
+                        fill
+                        className="object-cover object-center"
+                        priority={currentIndex === 0}
+                        quality={90}
+                    />
                 </motion.div>
             </AnimatePresence>
 
-            {/* Content Container */}
-            <div className="relative z-10 h-full container mx-auto px-6 lg:px-12 flex items-center">
-                <div className="max-w-4xl pt-20">
-                    <AnimatePresence mode="wait">
-                        <motion.div
-                            key={`content-${currentIndex}`}
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{ duration: 0.5, delay: 0.2 }}
-                        >
-                            {/* Subtitle - Glass Badge */}
-                            {currentSlide.subtitle && (
-                                <motion.div
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.3, duration: 0.6 }}
-                                    className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full glass-panel-premium border-gold-primary/30"
-                                >
-                                    <span className="w-1.5 h-1.5 rounded-full bg-gold-primary animate-pulse" />
-                                    <span className="text-xs md:text-sm font-medium tracking-[0.2em] uppercase text-gold-light">
-                                        {currentSlide.subtitle}
-                                    </span>
-                                </motion.div>
-                            )}
+            {/* Dark gradient overlay (Optimized for performance) */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/20 z-0 pointer-events-none" />
 
-                            {/* Title - God Tier Typography */}
-                            <motion.div className="overflow-hidden mb-6">
-                                <motion.h1
-                                    initial={{ y: 100 }}
-                                    animate={{ y: 0 }}
-                                    transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1], delay: 0.3 }}
-                                    className="font-playfair text-5xl md:text-7xl lg:text-8xl font-bold leading-[1.1] text-white tracking-tight"
-                                >
-                                    {currentSlide.title.split(" ").map((word, i) => (
-                                        <span key={i} className="inline-block mr-4">
-                                            {i === 1 ? <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-light to-amber-600 italic">{word}</span> : word}
-                                        </span>
-                                    ))}
-                                </motion.h1>
-                            </motion.div>
-
-                            {/* Description */}
-                            {currentSlide.description && (
-                                <motion.p
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    transition={{ delay: 0.6, duration: 0.8 }}
-                                    className="text-lg md:text-xl text-white/80 mb-10 max-w-xl leading-relaxed font-light"
-                                >
-                                    {currentSlide.description}
-                                </motion.p>
-                            )}
-
-                            {/* CTA Buttons */}
-                            {currentSlide.ctaLink && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.8 }}
-                                    className="flex flex-wrap gap-4"
-                                >
-                                    <Link
-                                        href={currentSlide.ctaLink}
-                                        className="parametric-btn group relative px-8 py-4 bg-white text-charcoal font-medium rounded-full overflow-hidden transition-transform hover:scale-105 active:scale-95"
-                                    >
-                                        <span className="relative z-10 flex items-center gap-2">
-                                            {currentSlide.ctaText || 'Shop Collection'}
-                                            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                                        </span>
-                                        <div className="absolute inset-0 bg-gold-primary transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out -z-0" />
-                                        <span className="absolute inset-0 z-10 border border-white/0 group-hover:border-white/20 rounded-full transition-colors" />
-                                    </Link>
-
-                                    <Link
-                                        href="/about"
-                                        className="group px-8 py-4 bg-transparent border border-white/30 text-white font-medium rounded-full hover:bg-white/10 hover:border-white transition-all backdrop-blur-sm"
-                                    >
-                                        Our Story
-                                    </Link>
-                                </motion.div>
-                            )}
+            {/* Content Container - Perfect Centering */}
+            <div className="relative z-10 w-full h-full flex flex-col items-center justify-center text-center px-6 md:px-12 pt-16">
+                {isMounted && (
+                    <motion.div
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="visible"
+                        className="max-w-4xl mx-auto flex flex-col items-center"
+                    >
+                        {/* Headline */}
+                        <motion.div variants={itemVariants} className="mb-4 md:mb-6">
+                            <h1 className="font-playfair text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal leading-tight tracking-wide shadow-black drop-shadow-xl">
+                                <span className="text-white">Crafting </span>
+                                <span className="text-[#D4AF77] italic font-light">Timeless</span>
+                                <span className="text-white"> Elegance</span>
+                            </h1>
                         </motion.div>
-                    </AnimatePresence>
-                </div>
+
+                        {/* Subheadline */}
+                        <motion.h2
+                            variants={itemVariants}
+                            className="text-xs sm:text-sm md:text-base text-[#FFFDD0]/90 font-light tracking-wider mb-5 md:mb-8 drop-shadow-lg px-4"
+                        >
+                            Premium Shawls • Elegant Gents Suiting • Exquisite Fragrances
+                        </motion.h2>
+
+                        {/* Tagline */}
+                        <motion.p
+                            variants={itemVariants}
+                            className="text-[9px] sm:text-[10px] md:text-xs font-light tracking-[0.3em] uppercase text-white/80 mb-10 md:mb-12 drop-shadow-sm"
+                        >
+                            Where Heritage Meets Modern Luxury
+                        </motion.p>
+
+                        {/* CTA Button */}
+                        <motion.div variants={itemVariants}>
+                            <Link
+                                href="/products"
+                                className="group relative inline-flex items-center justify-center px-8 py-4 bg-[#D4AF77] text-black font-semibold uppercase tracking-widest text-xs md:text-sm overflow-hidden transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] rounded-none z-10"
+                            >
+                                <span className="relative z-10 flex items-center gap-2">
+                                    Shop the Collection
+                                    <ArrowRight size={16} className="group-hover:translate-x-1.5 transition-transform duration-300" />
+                                </span>
+                                {/* Shine Effect */}
+                                <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent group-hover:animate-shimmer z-0" />
+                            </Link>
+                        </motion.div>
+                    </motion.div>
+                )}
             </div>
 
-            {/* Navigation Controls - Glass & Minimal */}
-            <div className="absolute bottom-12 right-8 md:right-16 flex items-center gap-4 z-20">
-                <div className="flex items-center gap-1 mr-4">
-                    <span className="text-3xl font-playfair font-bold text-white">
-                        {String(currentIndex + 1).padStart(2, '0')}
-                    </span>
-                    <span className="text-white/40 text-lg">/</span>
-                    <span className="text-white/40 text-lg">
-                        {String(slides.length).padStart(2, '0')}
-                    </span>
-                </div>
-
-                <div className="flex gap-2">
-                    <button
-                        onClick={slidePrev}
-                        className="w-14 h-14 rounded-full glass-panel-premium flex items-center justify-center text-white hover:bg-white hover:text-charcoal transition-all duration-500 hover:scale-110 active:scale-95 group"
-                        aria-label="Previous slide"
-                    >
-                        <ChevronLeft size={24} className="group-hover:-translate-x-0.5 transition-transform" />
-                    </button>
-                    <button
-                        onClick={slideNext}
-                        className="w-14 h-14 rounded-full glass-panel-premium flex items-center justify-center text-white hover:bg-white hover:text-charcoal transition-all duration-500 hover:scale-110 active:scale-95 group"
-                        aria-label="Next slide"
-                    >
-                        <ChevronRight size={24} className="group-hover:translate-x-0.5 transition-transform" />
-                    </button>
-                </div>
-            </div>
-
-            {/* Progress Bar */}
-            <div className="absolute bottom-0 left-0 w-full h-1 bg-white/10">
+            {/* Scroll Down Arrow */}
+            {isMounted && (
                 <motion.div
-                    key={currentIndex}
-                    initial={{ width: "0%" }}
-                    animate={{ width: "100%" }}
-                    transition={{ duration: 8, ease: "linear" }}
-                    className="h-full bg-gold-primary"
-                />
-            </div>
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.5, duration: 1 }}
+                    className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2"
+                >
+                    <span className="text-[9px] tracking-[0.2em] uppercase text-white/50 font-light hidden md:block">Scroll</span>
+                    <motion.div
+                        animate={{ y: [0, 6, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                        className="text-[#D4AF77]"
+                    >
+                        <ArrowDown size={18} strokeWidth={1} />
+                    </motion.div>
+                </motion.div>
+            )}
         </section>
     );
 }

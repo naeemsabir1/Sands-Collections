@@ -10,14 +10,14 @@ const subcategories = [
     {
         name: "Women's Shawls",
         description: 'Luxurious pashmina, cashmere, and velvet shawls. Timeless elegance for every occasion.',
-        image: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=2574',
+        image: "/Women's Shawls.webp",
         href: '/women/shawls',
         featured: true,
     },
     {
         name: 'Duppattas',
         description: 'Exquisite organza, chiffon, and Banarasi silk duppattas. Add a touch of grace to any outfit.',
-        image: 'https://images.unsplash.com/photo-1585914641050-fa9883c4e21c?q=80&w=2787',
+        image: '/Dupattas.webp',
         href: '/women/duppattas',
         featured: false,
     },
@@ -31,7 +31,7 @@ export default function WomensCollectionPage() {
                 <div
                     className="absolute inset-0 bg-cover bg-center"
                     style={{
-                        backgroundImage: 'url(https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=2574)',
+                        backgroundImage: "url('/Women\\'s Collection.webp')",
                     }}
                 >
                     <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />

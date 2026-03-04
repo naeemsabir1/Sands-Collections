@@ -9,12 +9,11 @@ import {
     X,
     ShoppingBag,
     Search,
-    Heart,
     ChevronDown,
     User
 } from 'lucide-react';
+import Image from 'next/image';
 import { useCart } from '@/contexts/CartContext';
-import { useWishlist } from '@/contexts/WishlistContext';
 import { SearchModal } from './SearchModal';
 
 const categories = [
@@ -58,7 +57,7 @@ const categories = [
     {
         name: 'Contact Us',
         href: '/contact',
-    },
+    }
 ];
 
 export function Navbar() {
@@ -67,15 +66,12 @@ export function Navbar() {
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
-    const [hasMounted, setHasMounted] = useState(false); // Hydration fix
+    const [hasMounted, setHasMounted] = useState(false);
     const { state: cartState } = useCart();
-    const { state: wishlistState } = useWishlist();
 
-    // Handle scroll for navbar styling
     // Handle scroll for navbar styling
     useEffect(() => {
-        setHasMounted(true); // Mark as mounted to enable client-only rendering
-
+        setHasMounted(true);
         let ticking = false;
         const handleScroll = () => {
             if (!ticking) {
@@ -95,40 +91,46 @@ export function Navbar() {
 
     return (
         <>
-            {/* Announcement Bar - Slim & Premium */}
-            <div className="bg-charcoal text-white text-center py-2 px-4 relative z-50">
-                <p className="text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase animate-pulse">
-                    Free Shipping on Orders Above PKR 5,000
-                </p>
-            </div>
-
-            {/* Floating Glass Island Navbar */}
-            <header className={`fixed left-1/2 -translate-x-1/2 z-40 transition-all duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)] w-[95%] max-w-7xl ${isScrolled
-                ? 'top-4 rounded-full glass-island py-3 shadow-2xl bg-white/90 border-white/40'
-                : 'top-12 rounded-2xl bg-white/50 backdrop-blur-md border-white/20 py-5'
+            {/* Premium Sticky Navbar */}
+            <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)] ${isScrolled
+                ? 'bg-black shadow-[0_4px_30px_rgba(0,0,0,0.5)] py-3'
+                : 'bg-[#0F0F0F] bg-opacity-95 backdrop-blur-md py-5 border-b border-white/5'
                 }`}>
-                <nav className="px-6 md:px-8">
+                <nav className="container mx-auto px-6 md:px-12">
                     <div className="flex items-center justify-between">
-                        {/* Mobile Menu Button - Magnetic */}
+                        {/* Mobile Menu Button */}
                         <button
-                            className="lg:hidden p-2 -ml-2 text-charcoal hover:text-gold-primary transition-colors hover:scale-110 active:scale-95"
+                            className="lg:hidden p-2 -ml-2 text-[#D4AF77] hover:text-white transition-colors"
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
                             aria-label="Toggle menu"
                         >
-                            {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
+                            {isMenuOpen ? <X size={24} strokeWidth={1.5} /> : <Menu size={24} strokeWidth={1.5} />}
                         </button>
 
-                        {/* Logo - Animated Reveal */}
-                        <Link href="/" className="flex-shrink-0 group relative overflow-hidden">
-                            <h1 className="font-playfair text-xl md:text-2xl font-bold tracking-tight">
-                                <span className="text-charcoal group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-charcoal group-hover:to-gold-dark transition-all duration-500">SANDS</span>
-                                <span className="text-gold-primary ml-1.5 group-hover:text-gold-dark transition-colors duration-500">COLLECTIONS</span>
-                            </h1>
-                            <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gold-primary transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
+                        {/* Logo Area */}
+                        <Link href="/" className="flex items-center gap-3 lg:gap-4 group">
+                            {/* Logo Image Placeholder (User will replace sands-logo.png) */}
+                            <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border border-[#D4AF77]/30 group-hover:border-[#D4AF77] transition-all duration-500 bg-white/5 backdrop-blur-sm shadow-[0_0_15px_rgba(212,175,119,0.1)] shrink-0 flex items-center justify-center p-1">
+                                <Image
+                                    src="/sands-logo.png"
+                                    alt="Sands Collections Logo"
+                                    fill
+                                    sizes="(max-width: 768px) 40px, 48px"
+                                    className="object-contain"
+                                />
+                            </div>
+                            <div className="flex flex-col items-center lg:items-start group cursor-pointer">
+                                <h1 className="font-playfair text-xl md:text-2xl lg:text-[28px] font-bold tracking-tight text-[#D4AF77] group-hover:text-white transition-colors duration-500 whitespace-nowrap">
+                                    SANDS <span className="font-light">COLLECTIONS</span>
+                                </h1>
+                                <p className="text-[8px] md:text-[9.5px] font-medium tracking-[0.3em] uppercase text-[#FFFDD0] opacity-80 mt-0.5 whitespace-nowrap">
+                                    Timeless Pakistani Luxury
+                                </p>
+                            </div>
                         </Link>
 
-                        {/* Desktop Navigation - Clean & Spaced */}
-                        <div className="hidden lg:flex items-center gap-8">
+                        {/* Desktop Navigation - Center */}
+                        <div className="hidden lg:flex items-center gap-10">
                             {categories.map((category) => (
                                 <div
                                     key={category.name}
@@ -138,38 +140,38 @@ export function Navbar() {
                                 >
                                     <Link
                                         href={category.href}
-                                        className="flex items-center gap-1.5 py-2 text-[0.9375rem] font-medium text-charcoal hover:text-black transition-colors relative"
+                                        className="flex items-center gap-1.5 py-2 text-[0.875rem] font-medium text-white/90 hover:text-white transition-all duration-300 hover:-translate-y-0.5 group"
                                     >
-                                        <span className="relative z-10">{category.name}</span>
-                                        {/* Hover Underline Animation */}
-                                        <span className="absolute bottom-1 left-0 w-0 h-[1px] bg-gold-primary group-hover:w-full transition-all duration-300 ease-out" />
+                                        <span className="font-sans">{category.name}</span>
+                                        {/* Premium Gold Underline */}
+                                        <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#D4AF77] group-hover:w-full transition-all duration-300 ease-out opacity-80" />
 
                                         {category.submenu && (
                                             <ChevronDown
-                                                size={12}
-                                                className={`transition-transform duration-300 text-charcoal/60 ${activeDropdown === category.name ? 'rotate-180' : ''
+                                                size={14}
+                                                className={`transition-transform duration-300 text-[#D4AF77]/70 ${activeDropdown === category.name ? 'rotate-180 text-[#D4AF77]' : ''
                                                     }`}
                                             />
                                         )}
                                     </Link>
 
-                                    {/* Glass Dropdown */}
+                                    {/* Glass Dropdown Menu */}
                                     {category.submenu && (
                                         <AnimatePresence>
                                             {activeDropdown === category.name && (
                                                 <motion.div
-                                                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                    initial={{ opacity: 0, y: 15, scale: 0.98 }}
                                                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                                    transition={{ duration: 0.2, ease: "easeOut" }}
+                                                    exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                                                    transition={{ duration: 0.25, ease: "easeOut" }}
                                                     className="absolute top-full left-1/2 -translate-x-1/2 pt-6 w-max"
                                                 >
-                                                    <div className="min-w-[200px] glass-panel-premium rounded-2xl overflow-hidden p-2 shadow-2xl">
+                                                    <div className="min-w-[240px] bg-[#0A0A0A]/95 backdrop-blur-xl border border-white/10 rounded-none p-3 shadow-[0_10px_40px_rgba(0,0,0,0.8)]">
                                                         {category.submenu.map((item) => (
                                                             <Link
                                                                 key={item.name}
                                                                 href={item.href}
-                                                                className="block px-4 py-3 text-sm font-medium text-charcoal hover:bg-gold-primary/10 hover:text-gold-dark rounded-xl transition-all duration-200 hover:pl-5"
+                                                                className="block px-5 py-3.5 text-sm font-light text-white/80 hover:bg-white/5 hover:text-[#D4AF77] transition-all duration-300 hover:pl-7"
                                                             >
                                                                 {item.name}
                                                             </Link>
@@ -183,45 +185,32 @@ export function Navbar() {
                             ))}
                         </div>
 
-                        {/* Right Side Icons - Floating Magnetic */}
-                        <div className="flex items-center gap-3">
+                        {/* Right Side Icons */}
+                        <div className="flex items-center gap-5">
                             <button
                                 onClick={() => setIsSearchOpen(true)}
-                                className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/5 hover:scale-110 active:scale-95 transition-all duration-300 group"
+                                className="w-10 h-10 flex items-center justify-center text-[#D4AF77] hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
                                 aria-label="Search"
                             >
-                                <Search size={20} strokeWidth={1.5} className="text-charcoal group-hover:text-gold-dark transition-colors" />
+                                <Search size={22} strokeWidth={1.5} />
                             </button>
 
                             <Link
-                                href="/wishlist"
-                                className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/5 hover:scale-110 active:scale-95 transition-all duration-300 group relative"
-                                aria-label="Wishlist"
-                            >
-                                <Heart size={20} strokeWidth={1.5} className="text-charcoal group-hover:text-gold-dark transition-colors" />
-                                {hasMounted && wishlistState.totalItems > 0 && (
-                                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-gold-primary text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm animate-bounce">
-                                        {wishlistState.totalItems}
-                                    </span>
-                                )}
-                            </Link>
-
-                            <Link
                                 href="/admin"
-                                className="hidden lg:flex w-10 h-10 rounded-full items-center justify-center hover:bg-black/5 hover:scale-110 active:scale-95 transition-all duration-300 group"
+                                className="hidden lg:flex w-10 h-10 items-center justify-center text-[#D4AF77] hover:text-white transition-all duration-300 hover:scale-110 active:scale-95"
                                 aria-label="Account"
                             >
-                                <User size={20} strokeWidth={1.5} className="text-charcoal group-hover:text-gold-dark transition-colors" />
+                                <User size={22} strokeWidth={1.5} />
                             </Link>
 
                             <Link
                                 href="/cart"
-                                className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/5 hover:scale-110 active:scale-95 transition-all duration-300 group relative"
+                                className="w-10 h-10 flex items-center justify-center text-[#D4AF77] hover:text-white transition-all duration-300 hover:scale-110 active:scale-95 relative"
                                 aria-label="Cart"
                             >
-                                <ShoppingBag size={20} strokeWidth={1.5} className="text-charcoal group-hover:text-gold-dark transition-colors" />
+                                <ShoppingBag size={22} strokeWidth={1.5} />
                                 {hasMounted && cartState.totalItems > 0 && (
-                                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-gold-primary text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm animate-bounce">
+                                    <span className="absolute 0 right-0 w-4 h-4 bg-[#D4AF77] text-black text-[10px] font-bold flex items-center justify-center rounded-full shadow-lg">
                                         {cartState.totalItems}
                                     </span>
                                 )}
@@ -235,101 +224,93 @@ export function Navbar() {
                     {isMenuOpen && (
                         <motion.div
                             initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
+                            animate={{ opacity: 1, height: '100vh' }}
                             exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.25 }}
-                            className="lg:hidden bg-white border-t border-gray-100 overflow-hidden"
+                            transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
+                            className="lg:hidden absolute top-full left-0 w-full bg-[#0A0A0A] border-t border-white/10 overflow-hidden"
+                            style={{ height: 'calc(100vh - 70px)' }}
                         >
-                            <div className="container mx-auto px-4 py-4">
+                            <div className="container mx-auto px-6 py-8 flex flex-col h-full">
                                 {/* Mobile Search */}
                                 <button
                                     onClick={() => {
                                         setIsMenuOpen(false);
                                         setIsSearchOpen(true);
                                     }}
-                                    className="w-full flex items-center gap-3 px-4 py-3 mb-3 bg-cream rounded-lg text-medium-gray"
+                                    className="w-full flex items-center gap-4 px-5 py-4 mb-8 bg-white/5 border border-white/10 text-white/50 hover:text-white transition-colors"
                                 >
-                                    <Search size={18} />
-                                    <span className="text-sm">Search products...</span>
+                                    <Search size={20} />
+                                    <span className="font-light tracking-wide">Search luxurious items...</span>
                                 </button>
 
-                                {categories.map((category) => (
-                                    <div key={category.name} className="border-b border-gray-50 last:border-0">
-                                        <div className="py-2">
-                                            <div className="flex items-center justify-between">
-                                                <Link
-                                                    href={category.href}
-                                                    className="flex-1 py-2 text-charcoal font-medium text-[0.9375rem]"
-                                                    onClick={() => !category.submenu && setIsMenuOpen(false)}
-                                                >
-                                                    {category.name}
-                                                </Link>
-                                                {category.submenu && (
-                                                    <button
-                                                        onClick={() =>
-                                                            setActiveDropdown(
-                                                                activeDropdown === category.name ? null : category.name
-                                                            )
-                                                        }
-                                                        className="p-2 text-medium-gray"
+                                <div className="flex-1 overflow-y-auto">
+                                    {categories.map((category) => (
+                                        <div key={category.name} className="border-b border-white/10 last:border-0 pl-2">
+                                            <div className="py-2">
+                                                <div className="flex items-center justify-between">
+                                                    <Link
+                                                        href={category.href}
+                                                        className="flex-1 py-4 text-white text-lg font-light tracking-wide"
+                                                        onClick={() => !category.submenu && setIsMenuOpen(false)}
                                                     >
-                                                        <ChevronDown
-                                                            size={18}
-                                                            className={`transition-transform duration-200 ${activeDropdown === category.name ? 'rotate-180' : ''
-                                                                }`}
-                                                        />
-                                                    </button>
-                                                )}
+                                                        {category.name}
+                                                    </Link>
+                                                    {category.submenu && (
+                                                        <button
+                                                            onClick={() =>
+                                                                setActiveDropdown(
+                                                                    activeDropdown === category.name ? null : category.name
+                                                                )
+                                                            }
+                                                            className="p-4 text-[#D4AF77]"
+                                                        >
+                                                            <ChevronDown
+                                                                size={20}
+                                                                className={`transition-transform duration-300 ${activeDropdown === category.name ? 'rotate-180' : ''
+                                                                    }`}
+                                                            />
+                                                        </button>
+                                                    )}
+                                                </div>
+
+                                                {/* Mobile Submenu */}
+                                                <AnimatePresence>
+                                                    {category.submenu && activeDropdown === category.name && (
+                                                        <motion.div
+                                                            initial={{ opacity: 0, height: 0 }}
+                                                            animate={{ opacity: 1, height: 'auto' }}
+                                                            exit={{ opacity: 0, height: 0 }}
+                                                            className="overflow-hidden"
+                                                        >
+                                                            <div className="pl-6 pb-4 flex flex-col gap-4">
+                                                                {category.submenu.map((item) => (
+                                                                    <Link
+                                                                        key={item.name}
+                                                                        href={item.href}
+                                                                        className="text-white/60 text-[0.9375rem] font-light hover:text-[#D4AF77] transition-colors"
+                                                                        onClick={() => setIsMenuOpen(false)}
+                                                                    >
+                                                                        {item.name}
+                                                                    </Link>
+                                                                ))}
+                                                            </div>
+                                                        </motion.div>
+                                                    )}
+                                                </AnimatePresence>
                                             </div>
-
-                                            {/* Mobile Submenu */}
-                                            <AnimatePresence>
-                                                {category.submenu && activeDropdown === category.name && (
-                                                    <motion.div
-                                                        initial={{ opacity: 0, height: 0 }}
-                                                        animate={{ opacity: 1, height: 'auto' }}
-                                                        exit={{ opacity: 0, height: 0 }}
-                                                        className="pl-4 overflow-hidden"
-                                                    >
-                                                        {category.submenu.map((item) => (
-                                                            <Link
-                                                                key={item.name}
-                                                                href={item.href}
-                                                                className="block py-2.5 text-sm text-medium-gray hover:text-gold-primary"
-                                                                onClick={() => setIsMenuOpen(false)}
-                                                            >
-                                                                {item.name}
-                                                            </Link>
-                                                        ))}
-                                                    </motion.div>
-                                                )}
-                                            </AnimatePresence>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
 
-                                {/* Mobile Menu Footer */}
-                                <div className="flex items-center gap-4 pt-4 mt-2">
-                                    <Link
-                                        href="/wishlist"
-                                        onClick={() => setIsMenuOpen(false)}
-                                        className="flex items-center gap-2 text-sm text-charcoal hover:text-gold-primary"
-                                    >
-                                        <Heart size={18} />
-                                        Wishlist
-                                        {hasMounted && wishlistState.totalItems > 0 && (
-                                            <span className="px-1.5 py-0.5 bg-gold-primary text-white text-xs rounded-full">
-                                                {wishlistState.totalItems}
-                                            </span>
-                                        )}
-                                    </Link>
+                                {/* Mobile Footer Links */}
+                                <div className="mt-auto pt-8 border-t border-white/10 flex justify-between px-2">
                                     <Link
                                         href="/admin"
                                         onClick={() => setIsMenuOpen(false)}
-                                        className="flex items-center gap-2 text-sm text-charcoal hover:text-gold-primary"
+                                        className="flex items-center gap-3 text-sm text-[#D4AF77] hover:text-white uppercase tracking-wider font-medium"
                                     >
                                         <User size={18} />
-                                        Account
+                                        My Account
                                     </Link>
                                 </div>
                             </div>

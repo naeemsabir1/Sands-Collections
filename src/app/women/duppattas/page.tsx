@@ -73,7 +73,7 @@ export default function WomensDuppattasPage() {
                 <div
                     className="absolute inset-0 bg-cover bg-center"
                     style={{
-                        backgroundImage: 'url(https://images.unsplash.com/photo-1585914641050-fa9883c4e21c?q=80&w=2787)',
+                        backgroundImage: "url('/Dupattas.webp')",
                     }}
                 >
                     <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />

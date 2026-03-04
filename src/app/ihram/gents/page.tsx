@@ -73,7 +73,7 @@ export default function GentsIhramPage() {
                 <div
                     className="absolute inset-0 bg-cover bg-center"
                     style={{
-                        backgroundImage: 'url(https://plus.unsplash.com/premium_photo-1678122822557-55e1432f4b46?q=80&w=2574)',
+                        backgroundImage: "url('/Men Ihram.webp')",
                     }}
                 >
                     <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30" />

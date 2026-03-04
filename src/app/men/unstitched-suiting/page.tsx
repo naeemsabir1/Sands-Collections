@@ -73,7 +73,7 @@ export default function MensUnstitchedSuitingPage() {
                 <div
                     className="absolute inset-0 bg-cover bg-center"
                     style={{
-                        backgroundImage: 'url(https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=2080)',
+                        backgroundImage: "url('/Men\\'s Suiting.webp')",
                     }}
                 >
                     <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />

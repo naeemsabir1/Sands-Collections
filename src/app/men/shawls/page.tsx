@@ -73,7 +73,7 @@ export default function MensShawlsPage() {
                 <div
                     className="absolute inset-0 bg-cover bg-center"
                     style={{
-                        backgroundImage: 'url(https://images.unsplash.com/photo-1601924994987-69e26d50dc26?q=80&w=2070)',
+                        backgroundImage: "url('/Men\\'s Shawls.webp')",
                     }}
                 >
                     <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />

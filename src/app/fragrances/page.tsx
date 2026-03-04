@@ -10,21 +10,21 @@ const subcategories = [
     {
         name: "Men's Fragrances",
         description: 'Bold and sophisticated scents. From intense oud to fresh aquatics for the modern man.',
-        image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=2104',
+        image: '/Mens Fragrances.webp',
         href: '/fragrances/mens',
         gradient: 'from-slate-900 to-slate-700',
     },
     {
         name: "Women's Fragrances",
         description: 'Romantic and seductive scents. Delicate florals, elegant roses, and captivating orchids.',
-        image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=2104',
+        image: "/women's fragrances.webp",
         href: '/fragrances/womens',
         gradient: 'from-rose-900 to-pink-700',
     },
     {
         name: 'Unisex Fragrances',
         description: 'Sophisticated scents that transcend gender. Warm ambers, rich ouds, and clean musks.',
-        image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=2104',
+        image: '/Unisex Fragrances.webp',
         href: '/fragrances/unisex',
         gradient: 'from-amber-900 to-yellow-700',
     },
@@ -35,7 +35,7 @@ export default function FragrancesPage() {
         <div className="min-h-screen bg-off-white">
             {/* Hero Section */}
             <section className="relative h-80 md:h-[28rem] overflow-hidden bg-gradient-to-br from-amber-900 via-amber-800 to-amber-700">
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=2104')] bg-cover bg-center opacity-30" />
+                <div className="absolute inset-0 bg-[url('/Fragrances%201.webp')] bg-cover bg-center opacity-30" />
                 <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
 
                 {/* Floating particles effect */}

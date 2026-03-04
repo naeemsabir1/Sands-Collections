@@ -10,13 +10,13 @@ const subcategories = [
     {
         name: 'Ladies Ihram',
         description: 'Comfortable and modest Ihram sets for ladies. Designed for your spiritual journey with maximum comfort.',
-        image: 'https://plus.unsplash.com/premium_photo-1678122822557-55e1432f4b46?q=80&w=2574',
+        image: '/Women Ihram.webp',
         href: '/ihram/ladies',
     },
     {
         name: 'Gents Ihram',
         description: 'Pure and comfortable traditional two-piece Ihram sets for men. Premium fabrics for Hajj and Umrah.',
-        image: 'https://plus.unsplash.com/premium_photo-1678122822557-55e1432f4b46?q=80&w=2574',
+        image: '/Men Ihram.webp',
         href: '/ihram/gents',
     },
 ];
@@ -29,7 +29,7 @@ export default function IhramPage() {
                 <div
                     className="absolute inset-0 bg-cover bg-center"
                     style={{
-                        backgroundImage: 'url(https://plus.unsplash.com/premium_photo-1678122822557-55e1432f4b46?q=80&w=2574)',
+                        backgroundImage: "url('/Ihram 1.webp')",
                     }}
                 >
                     <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />

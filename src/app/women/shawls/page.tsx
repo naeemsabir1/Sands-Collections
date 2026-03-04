@@ -73,7 +73,7 @@ export default function WomensShawlsPage() {
                 <div
                     className="absolute inset-0 bg-cover bg-center"
                     style={{
-                        backgroundImage: 'url(https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=2574)',
+                        backgroundImage: "url('/Women\\'s Shawls.webp')",
                     }}
                 >
                     <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />

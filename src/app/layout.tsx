@@ -8,20 +8,20 @@ import { WishlistProvider } from "@/contexts/WishlistContext";
 import { AnalyticsProvider } from "@/components/layout/AnalyticsProvider";
 
 const playfair = Playfair_Display({
-  variable: "--font-playfair",
   subsets: ["latin"],
+  variable: "--font-playfair",
   display: "swap",
 });
 
 const inter = Inter({
-  variable: "--font-inter",
   subsets: ["latin"],
+  variable: "--font-inter",
   display: "swap",
 });
 
 const dancing = Dancing_Script({
-  variable: "--font-dancing",
   subsets: ["latin"],
+  variable: "--font-dancing",
   display: "swap",
 });
 
@@ -44,9 +44,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${playfair.variable} ${inter.variable} ${dancing.variable}`}>
       <body
-        className={`${playfair.variable} ${inter.variable} ${dancing.variable} font-inter antialiased bg-white selection:bg-gold-primary/30`}
+        className="font-inter antialiased bg-white selection:bg-gold-primary/30"
       >
         {/* Static subtle gradient - GPU friendly (replaces heavy blur orbs) */}
         <div className="fixed inset-0 pointer-events-none -z-10 bg-gradient-to-br from-cream/30 via-transparent to-gold-primary/5" />
@@ -66,4 +66,3 @@ export default function RootLayout({
     </html>
   );
 }
-

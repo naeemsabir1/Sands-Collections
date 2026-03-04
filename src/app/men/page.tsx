@@ -10,14 +10,14 @@ const subcategories = [
     {
         name: "Men's Shawls",
         description: 'Premium pashmina and woolen shawls. Hand-woven with traditional Kashmiri techniques.',
-        image: 'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?q=80&w=2070',
+        image: "/Men's Shawls.webp",
         href: '/men/shawls',
         featured: true,
     },
     {
         name: 'Unstitched Suiting',
         description: 'Fine Italian-style suiting fabrics for bespoke tailoring. Premium wool and linen blends.',
-        image: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=2080',
+        image: "/Men's Suiting.webp",
         href: '/men/unstitched-suiting',
         featured: false,
     },
@@ -31,7 +31,7 @@ export default function MensCollectionPage() {
                 <div
                     className="absolute inset-0 bg-cover bg-center"
                     style={{
-                        backgroundImage: 'url(https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=2574)',
+                        backgroundImage: "url('/Men\\'s Collections.webp')",
                     }}
                 >
                     <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />

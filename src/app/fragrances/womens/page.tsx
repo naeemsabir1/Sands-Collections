@@ -64,7 +64,10 @@ export default function WomensFragrancesPage() {
         <div className="min-h-screen bg-off-white">
             {/* Hero Section */}
             <section className="relative h-72 md:h-96 overflow-hidden bg-gradient-to-r from-rose-900 via-rose-800 to-pink-700">
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=2104')] bg-cover bg-center opacity-25" />
+                <div
+                    className="absolute inset-0 bg-cover bg-center opacity-25"
+                    style={{ backgroundImage: "url(\"/women's fragrances.webp\")" }}
+                />
                 <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent" />
                 <div className="relative h-full container mx-auto px-4 lg:px-8 flex items-center">
                     <motion.div

@@ -7,11 +7,10 @@ import { FeaturedCollections } from '@/components/home/FeaturedCollections';
 import { NewArrivals } from '@/components/home/NewArrivals';
 import { TestimonialMarquee } from '@/components/home/TestimonialMarquee';
 import { BrandExperience } from '@/components/home/BrandExperience';
-import { HeroSlide, CuratedCategory, FeaturedCollection, Product } from '@/lib/types';
-import { getHeroSlides, getCuratedCategories, getFeaturedCollections, getProducts } from '@/lib/firestore';
+import { CuratedCategory, FeaturedCollection, Product } from '@/lib/types';
+import { getCuratedCategories, getFeaturedCollections, getProducts } from '@/lib/firestore';
 
 export default function HomePage() {
-  const [heroSlides, setHeroSlides] = useState<HeroSlide[]>([]);
   const [categories, setCategories] = useState<CuratedCategory[]>([]);
   const [featured, setFeatured] = useState<FeaturedCollection[]>([]);
 
@@ -20,13 +19,11 @@ export default function HomePage() {
   useEffect(() => {
     async function loadHomeData() {
       try {
-        const [slides, cats, feat] = await Promise.all([
-          getHeroSlides(),
+        const [cats, feat] = await Promise.all([
           getCuratedCategories(),
           getFeaturedCollections()
         ]);
 
-        setHeroSlides(slides);
         setCategories(cats);
         setFeatured(feat);
       } catch (error) {
@@ -41,8 +38,8 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Hero Section - Loads from Firebase or shows defaults */}
-      <HeroSlider slides={heroSlides} isLoading={isLoading} />
+      {/* Hero Section - Uses Local Images */}
+      <HeroSlider />
 
       {/* Category Navigation - Horizontal Scrolling */}
       <CategoryBar categories={categories} />
